@@ -128,3 +128,80 @@ construction-weather-dashboard/
 Jacinta Ndungu  
 Web Development Student at Moringa School
 Passionate about building practical tools with React and APIs for real‑world use cases.
+
+Weather-Aware Task Scheduling for Construction Teams
+
+---
+
+## 📌 Overview
+SiteWeather helps construction site managers and foremen make fast, defensible go/no-go decisions by integrating weather forecasts directly into task scheduling.  
+
+- **Phase 1**: Displayed current conditions and a 5-day forecast.  
+- **Phase 2**: Adds task management with weather-sensitive risk flags, replacing manual forecast checks with built-in warnings.
+
+---
+
+## 🎯 Business Problem
+Construction crews currently manage weather awareness and task scheduling separately. Wrong calls lead to rework, safety incidents, or wasted crew-hours.  
+
+**Target users**: Site managers and foremen scheduling daily tasks across one or more active sites.  
+**Value added**: Tasks marked weather-sensitive are automatically flagged when forecasted conditions pose a risk (e.g., rain on pour day, high wind on roofing day).
+
+---
+
+## 👥 User Stories
+- As a **foreman**, I can create a task for a specific site and date so my crew has a clear schedule.  
+- As a **foreman**, I can see weather-sensitive tasks checked against the forecast to anticipate delays.  
+- As a **site manager**, I can update a task’s status (pending/completed/postponed).  
+- As a **site manager**, I can edit or delete tasks without re-entering the schedule.
+
+---
+
+## 🛠️ Tech Stack
+- **Backend**: Flask, Flask-SQLAlchemy, Flask-CORS, PostgreSQL  
+- **Frontend**: React (function components, React Router, useState/useEffect)  
+- **API Calls**: fetch/Axios  
+- **Testing**: Postman  
+- **Forecast Integration**: Phase 1 weather API reused  
+
+---
+
+## 📂 Data Models
+**Users**  
+- id, name, email, role, password_hash  
+
+**Tasks**  
+- id, title, description, location, scheduled_date, status, weather_sensitive, user_id (FK)  
+
+**Relationships**  
+- One-to-many: A User owns many Tasks; each Task belongs to exactly one User.
+
+---
+
+## 🖥️ React Component Plan
+- **App** → Navbar, UserSelector, ForecastPanel  
+- **Dashboard** → TaskForm, TaskList → TaskItem (status/risk badge/edit/delete)  
+- **ErrorBanner** → Displays failed-request messages  
+
+---
+
+## 🚀 Build Steps (SDLC-Aligned)
+1. **Design** → Data model, API routes, component tree  
+2. **Backend** → Flask + SQLAlchemy models, CRUD endpoints, error handling  
+3. **Frontend** → React fetches from Flask API, risk flags on tasks  
+4. **Test & Ship** → Manual testing with Postman/browser, finalize docs/demo  
+
+---
+
+## ⚠️ Risks & Mitigations
+- **Scope creep on risk logic** → Ship simple date/condition match first.  
+- **Integration slipping** → Connect one real endpoint by Week 2.  
+- **Schema changes mid-build** → Finalize schema in Week 1.  
+
+
+## ✅ Rubric Alignment
+- Full CRUD on custom resource → Tasks  
+- 2+ relational resources → Users ↔ Tasks  
+- SQLAlchemy/SQL storage → PostgreSQL persistence  
+- Error handling → Explicit status codes + ErrorBanner UI  
+- Optional API integration → Forecast API drives risk-flag feature
