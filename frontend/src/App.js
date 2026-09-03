@@ -38,7 +38,12 @@ function App() {
 
   useEffect(() => {
     const savedUser = localStorage.getItem("siteweather_user");
-    if (!savedUser) return;
+    const savedToken = localStorage.getItem("siteweather_token");
+    if (!savedUser || !savedToken) {
+      localStorage.removeItem("siteweather_user");
+      localStorage.removeItem("siteweather_token");
+      return;
+    }
     try {
       const user = JSON.parse(savedUser);
       setCurrentUser(user);
