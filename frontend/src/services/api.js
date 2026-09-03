@@ -43,6 +43,14 @@ export async function createUser(user) {
   });
 }
 
+export async function login(credentials) {
+  return request("/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+}
+
 export async function updateUser(id, user) {
   return request(`/users/${id}`, {
     method: "PUT",

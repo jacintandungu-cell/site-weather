@@ -7,9 +7,9 @@ import Footer from "./components/Footer";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import ErrorBanner from "./components/ErrorBanner";
-import UserForm from "./components/UserForm";
-import UserList from "./components/UserList";
 import UserSelector from "./components/UserSelector";
+import LandingPage from "./components/LandingPage";
+import AuthPage from "./components/AuthPage";
 import { getTasks, getUsers } from "./services/api";
 import "./App.css";
 
@@ -19,8 +19,37 @@ function App() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
   const [activeUserId, setActiveUserId] = useState("");
+  const [view, setView] = useState("landing");
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const authenticate = (user) => {
+    localStorage.setItem("siteweather_user", JSON.stringify(user));
+    setCurrentUser(user);
+    setActiveUserId(String(user.id));
+    setView("dashboard");
+  };
+
+  const logout = () => {
+    localStorage.removeItem("siteweather_user");
+    setCurrentUser(null);
+    setView("landing");
+  };
 
   useEffect(() => {
+    const savedUser = localStorage.getItem("siteweather_user");
+    if (!savedUser) return;
+    try {
+      const user = JSON.parse(savedUser);
+      setCurrentUser(user);
+      setActiveUserId(String(user.id));
+      setView("dashboard");
+    } catch {
+      localStorage.removeItem("siteweather_user");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (view !== "dashboard") return;
     const fetchTasks = async () => {
       try {
         const data = await getTasks();
@@ -31,11 +60,19 @@ function App() {
     };
     fetchTasks();
     getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
-  }, []);
+  }, [view]);
+
+  if (view === "landing") {
+    return <div className="App"><LandingPage onLogin={() => setView("login")} onSignup={() => setView("signup")} /><Footer /></div>;
+  }
+
+  if (view === "login" || view === "signup") {
+    return <div className="App"><AuthPage mode={view} onAuthenticated={authenticate} onBack={() => setView("landing")} /><Footer /></div>;
+  }
 
   return (
     <div className="App">
-      <Navbar />
+      <Navbar currentUser={currentUser} onLogout={logout} />
 
       <main className="content">
         <SearchBar setCity={setCity} />
@@ -64,11 +101,6 @@ function App() {
           <TaskList tasks={activeUserId ? tasks.filter((task) => String(task.user_id) === String(activeUserId)) : tasks} setTasks={setTasks} setError={setError} />
         </section>
 
-        <section className="users-panel">
-          <h2>Users</h2>
-          <UserForm setUsers={setUsers} setError={setError} />
-          <UserList />
-        </section>
       </main>
 
       <Footer />

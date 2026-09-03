@@ -90,6 +90,20 @@ def create_user():
     db.session.commit()
     return jsonify({"message": "User created successfully", "id": user.id}), 201
 
+
+@app.route("/api/auth/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True) or {}
+    user = User.query.filter_by(email=data.get("email", "")).first()
+    if user is None or not user.check_password(data.get("password", "")):
+        return jsonify({"error": "Invalid email or password"}), 401
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role,
+    })
+
 @app.route("/api/users", methods=["GET"])
 def list_users():
     users = User.query.all()

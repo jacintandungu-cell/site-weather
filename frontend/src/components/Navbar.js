@@ -18,7 +18,7 @@ const TABS = [
   },
 ];
 
-function Navbar() {
+function Navbar({ currentUser, onLogout }) {
   const [active, setActive] = useState("weather");
   const panel = TABS.find((tab) => tab.id === active);
 
@@ -35,6 +35,10 @@ function Navbar() {
           </div>
         </div>
 
+        <div className="nav-tools">
+          {currentUser && <span className="signed-in">{currentUser.name}</span>}
+          {onLogout && <button className="logout-button" type="button" onClick={onLogout}>Log out</button>}
+        </div>
         <nav>
           <ul>
             {TABS.map((tab) => (
