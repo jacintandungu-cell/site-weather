@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createTask, getTasks, getUsers } from "../services/api";
 
-function TaskForm({ setTasks, setError }) {
+function TaskForm({ setTasks, setError, users: availableUsers, selectedUserId }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -10,15 +10,23 @@ function TaskForm({ setTasks, setError }) {
     weather_sensitive: false,
     user_id: ""
   });
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(availableUsers || []);
   const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
+    if (availableUsers) {
+      setUsers(availableUsers);
+      return undefined;
+    }
     getUsers()
       .then(setUsers)
       .catch((error) => setError(error.message || "Error loading users"))
       .finally(() => setLoadingUsers(false));
-  }, [setError]);
+  }, [availableUsers, setError]);
+
+  useEffect(() => {
+    if (selectedUserId) setFormData((current) => ({ ...current, user_id: selectedUserId }));
+  }, [selectedUserId]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

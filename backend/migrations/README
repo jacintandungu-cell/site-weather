@@ -1,0 +1,2 @@
+Run `pipenv run flask --app app db upgrade` to create the Users and Tasks tables.
+Run `pipenv run python seed.py` to add demo records.

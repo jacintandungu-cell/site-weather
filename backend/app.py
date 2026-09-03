@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
@@ -14,7 +15,29 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 db = SQLAlchemy(app)
+Migrate(app, db)
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
+
+
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({"error": "Bad request"}), 400
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Resource not found"}), 404
+
+
+@app.errorhandler(422)
+def unprocessable_entity(error):
+    return jsonify({"error": "Unprocessable entity"}), 422
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return jsonify({"error": "Internal server error"}), 500
 
 
 # User model
@@ -49,10 +72,6 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
 
-with app.app_context():
-    db.create_all()
-
-
 @app.route("/")
 def index():
     return jsonify({"message": "SiteWeather API running"})
@@ -84,9 +103,11 @@ def list_users():
         ,"task_count": len(u.tasks)
     } for u in users])
 
-@app.route("/api/users/<int:user_id>", methods=["PUT"])
+@app.route("/api/users/<int:user_id>", methods=["PUT", "PATCH"])
 def update_user(user_id):
-    user = User.query.get_or_404(user_id)
+    user = db.session.get(User, user_id)
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
     data = request.get_json(silent=True) or {}
     user.name = data.get("name", user.name)
     user.email = data.get("email", user.email)
@@ -98,7 +119,9 @@ def update_user(user_id):
 
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id)
+    user = db.session.get(User, user_id)
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
     db.session.delete(user)
     db.session.commit()
     return jsonify({"message": "User deleted"})
@@ -158,9 +181,11 @@ def list_tasks():
         "user_name": t.user.name if t.user else None
     } for t in tasks])
 
-@app.route("/api/tasks/<int:task_id>", methods=["PUT"])
+@app.route("/api/tasks/<int:task_id>", methods=["PUT", "PATCH"])
 def update_task(task_id):
-    task = Task.query.get_or_404(task_id)
+    task = db.session.get(Task, task_id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
     data = request.get_json(silent=True) or {}
     if "scheduled_date" in data:
         try:
@@ -177,7 +202,9 @@ def update_task(task_id):
 
 @app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
-    task = Task.query.get_or_404(task_id)
+    task = db.session.get(Task, task_id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
     db.session.delete(task)
     db.session.commit()
     return jsonify({"message": "Task deleted"})

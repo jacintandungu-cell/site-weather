@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import SearchBar from "./components/SearchBar";
 import WeatherResults from "./components/WeatherResults";
-import Forecast from "./components/Forecast";
+import ForecastPanel from "./components/ForecastPanel";
 import Footer from "./components/Footer";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import ErrorBanner from "./components/ErrorBanner";
 import UserForm from "./components/UserForm";
 import UserList from "./components/UserList";
-import { getTasks } from "./services/api";
+import UserSelector from "./components/UserSelector";
+import { getTasks, getUsers } from "./services/api";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+  const [activeUserId, setActiveUserId] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -28,6 +30,7 @@ function App() {
       }
     };
     fetchTasks();
+    getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
   }, []);
 
   return (
@@ -40,7 +43,7 @@ function App() {
         {city ? (
           <>
             <WeatherResults city={city} />
-            <Forecast city={city} />
+            <ForecastPanel city={city} />
           </>
         ) : (
           <section className="panel empty">
@@ -55,9 +58,10 @@ function App() {
 
         <section className="tasks-panel">
           <h2>Construction Tasks</h2>
-          <TaskForm setTasks={setTasks} setError={setError} />
+          <UserSelector users={users} selectedUserId={activeUserId} onChange={setActiveUserId} />
+          <TaskForm setTasks={setTasks} setError={setError} users={users} selectedUserId={activeUserId} />
           {error && <ErrorBanner message={error} />}
-          <TaskList tasks={tasks} setTasks={setTasks} setError={setError} />
+          <TaskList tasks={activeUserId ? tasks.filter((task) => String(task.user_id) === String(activeUserId)) : tasks} setTasks={setTasks} setError={setError} />
         </section>
 
         <section className="users-panel">

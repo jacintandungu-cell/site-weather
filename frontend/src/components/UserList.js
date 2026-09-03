@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUsers, createUser, deleteUser } from "../services/api";
+import { getUsers, createUser, updateUser, deleteUser } from "../services/api";
 import ErrorBanner from "./ErrorBanner";
 
 function UserList() {
@@ -33,6 +33,19 @@ function UserList() {
     }
   };
 
+  const handleEdit = async (user) => {
+    const name = window.prompt("Name", user.name);
+    const email = window.prompt("Email", user.email);
+    const role = window.prompt("Role", user.role);
+    if (!name || !email || !role) return;
+    try {
+      await updateUser(user.id, { name, email, role });
+      setUsers(await getUsers());
+    } catch (error) {
+      setError(error.message || "Error updating user");
+    }
+  };
+
   return (
     <div className="user-list">
       <h2>Users</h2>
@@ -51,6 +64,7 @@ function UserList() {
           {users.map((u) => (
             <li key={u.id}>
               {u.name} ({u.role}) — {u.email}
+              <button onClick={() => handleEdit(u)}>Edit</button>
               <button onClick={() => handleDelete(u.id)}>Delete</button>
             </li>
           ))}

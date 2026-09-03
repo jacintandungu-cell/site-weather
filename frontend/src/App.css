@@ -138,6 +138,20 @@ body {
   font-weight: bold;
 }
 
+.risk-badge {
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.risk-go { background: var(--go-soft); color: var(--go); }
+.risk-caution { background: var(--caution-soft); color: var(--caution); }
+.risk-stop { background: var(--stop-soft); color: var(--stop); }
+.risk-unknown, .risk-loading { background: #e8e8e8; color: #666; }
+
 .error-banner {
   background: var(--stop-soft);
   border-left: 4px solid var(--stop);
