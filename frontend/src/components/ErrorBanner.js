@@ -1,7 +1,7 @@
 import React from "react";
 
 function ErrorBanner({ message }) {
-  return <div className="error-banner">⚠️ {message}</div>;
+  return <div className="error-banner" role="alert">⚠️ {message}</div>;
 }
 
 export default ErrorBanner;

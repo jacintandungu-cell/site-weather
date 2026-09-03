@@ -79,20 +79,22 @@ function App() {
     getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
   }, [view]);
 
+  const appClassName = darkMode ? "App theme-dark" : "App";
+
   if (view === "landing") {
-    return <div className="App"><LandingPage onLogin={() => setView("login")} onSignup={() => setView("signup")} /><Footer /></div>;
+    return <div className={appClassName}><LandingPage onLogin={() => setView("login")} onSignup={() => setView("signup")} /><Footer /></div>;
   }
 
   if (view === "login" || view === "signup") {
-    return <div className="App"><AuthPage mode={view} onAuthenticated={authenticate} onBack={() => setView("landing")} onSwitchMode={setView} /><Footer /></div>;
+    return <div className={appClassName}><AuthPage mode={view} onAuthenticated={authenticate} onBack={() => setView("landing")} onSwitchMode={setView} /><Footer /></div>;
   }
 
   if (view === "settings") {
-    return <div className="App"><SettingsPage user={currentUser} onUpdated={updateCurrentUser} onClose={() => setView("dashboard")} /><Footer /></div>;
+    return <div className={appClassName}><SettingsPage user={currentUser} onUpdated={updateCurrentUser} onClose={() => setView("dashboard")} /><Footer /></div>;
   }
 
   return (
-    <div className={darkMode ? "App theme-dark" : "App"}>
+    <div className={appClassName}>
       <Navbar
         currentUser={currentUser}
         onLogout={logout}

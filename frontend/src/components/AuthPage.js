@@ -11,6 +11,12 @@ function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
 
   const update = (event) => setForm({ ...form, [event.target.name]: event.target.value });
 
+  const switchMode = (nextMode) => {
+    setError("");
+    setForgotPassword(false);
+    onSwitchMode(nextMode);
+  };
+
   const submit = async (event) => {
     event.preventDefault();
     if (isSignup && form.password !== form.confirmPassword) {
@@ -30,7 +36,10 @@ function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
         onAuthenticated(authenticated);
       }
     } catch (requestError) {
-      setError(requestError.message);
+      const fallback = isSignup
+        ? "We couldn't create your account. Please check your details and try again."
+        : "We couldn't sign you in. Check your email and password and try again.";
+      setError(requestError.message || fallback);
     } finally {
       setLoading(false);
     }
@@ -58,7 +67,7 @@ function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
           {isSignup && <label>Confirm password<input name="confirmPassword" type="password" value={form.confirmPassword} onChange={update} required /></label>}
           <button className="button button-primary" disabled={loading}>{loading ? "Working..." : isSignup ? "Create account" : "Log in"}</button>
           {!isSignup && <button type="button" className="forgot-link" onClick={() => { setForgotPassword(true); setError(""); }}>Forgot password?</button>}
-          {!isSignup && <button type="button" className="forgot-link" onClick={() => onSwitchMode("signup")}>Create an account</button>}
+          {!isSignup && <button type="button" className="forgot-link" onClick={() => switchMode("signup")}>Create an account</button>}
         </form>
         }
       </section>
