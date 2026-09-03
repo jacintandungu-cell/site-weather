@@ -317,6 +317,17 @@ h1, h2, h3, h4, button {
   box-shadow: 8px 8px 0 rgba(240, 180, 41, .28);
 }
 
+.dashboard-side { min-width: 260px; }
+
+.dashboard-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.25rem; }
+.profile-button, .dashboard-logout { padding: .65rem .85rem; border-radius: 5px; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+.profile-button { border: 1px solid #9aa99f; background: transparent; color: var(--steel); }
+.profile-button:hover { border-color: var(--steel); background: rgba(24, 54, 45, .07); }
+.dashboard-logout { border: 1px solid var(--stop); background: var(--stop); color: #fff; }
+.dashboard-logout:hover { background: #8f3022; }
+.theme-toggle { border: 1px solid #638074; border-radius: 5px; padding: .45rem .7rem; background: transparent; color: inherit; cursor: pointer; }
+.theme-toggle:hover { border-color: var(--amber); color: var(--amber); }
+
 .dashboard-date span {
   display: block;
   color: #b9d0c1;
@@ -411,7 +422,35 @@ h1, h2, h3, h4, button {
 @media (max-width: 700px) {
   .dashboard-heading { align-items: flex-start; flex-direction: column; gap: 1.25rem; }
   .dashboard-date { width: 100%; }
+  .dashboard-side { width: 100%; }
   .search-bar { flex-direction: column; }
   .dashboard-empty { padding: 1.5rem; }
   .tasks-heading { align-items: flex-start; flex-direction: column; }
 }
+
+.theme-dark {
+  --bg: #101714;
+  --surface: #19231e;
+  --ink: #e5eee8;
+  --muted: #aebdb3;
+  --line: #34463c;
+  --steel: #0c1511;
+  --shadow: 0 12px 32px rgba(0, 0, 0, .28);
+  --go-soft: #193829;
+  --caution-soft: #40351d;
+  --stop-soft: #43221d;
+}
+
+.theme-dark body,
+.theme-dark { background-color: var(--bg); color: var(--ink); }
+.theme-dark body { background-image: linear-gradient(120deg, rgba(50, 78, 63, .2), transparent 45%), repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px); }
+.theme-dark .navbar, .theme-dark .footer { background: #0b120e; }
+.theme-dark .panel, .theme-dark .tasks-panel, .theme-dark .auth-card, .theme-dark .settings-card { background: var(--surface); }
+.theme-dark .search { background: #20352a; border-color: #3d5b49; }
+.theme-dark .search::before { background: var(--bg); }
+.theme-dark .search-bar input, .theme-dark .task-form input, .theme-dark .task-form select, .theme-dark .auth-form input { background: #111a15; color: var(--ink); border-color: var(--line); }
+.theme-dark .task-item { background: #1d2a23; }
+.theme-dark .task-item button { background: #25352c; color: var(--ink); border-color: var(--line); }
+.theme-dark .profile-button { color: var(--ink); border-color: #718479; }
+.theme-dark .profile-button:hover { background: rgba(255, 255, 255, .08); }
+.theme-dark .dashboard-empty::after { border-color: rgba(240, 180, 41, .18); }

@@ -22,6 +22,11 @@ function App() {
   const [activeUserId, setActiveUserId] = useState("");
   const [view, setView] = useState("landing");
   const [currentUser, setCurrentUser] = useState(null);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("siteweather_theme") === "dark");
+
+  useEffect(() => {
+    localStorage.setItem("siteweather_theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
 
   const authenticate = (user) => {
     localStorage.setItem("siteweather_user", JSON.stringify(user));
@@ -87,8 +92,14 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Navbar currentUser={currentUser} onLogout={logout} onSettings={() => setView("settings")} />
+    <div className={darkMode ? "App theme-dark" : "App"}>
+      <Navbar
+        currentUser={currentUser}
+        onLogout={logout}
+        onSettings={() => setView("settings")}
+        darkMode={darkMode}
+        onToggleTheme={() => setDarkMode((enabled) => !enabled)}
+      />
 
       <main className="content">
         <header className="dashboard-heading">
@@ -97,9 +108,15 @@ function App() {
             <h2>Plan the shift with a clearer view.</h2>
             <p>Check conditions, find the workable window, then keep the crew aligned.</p>
           </div>
-          <div className="dashboard-date" aria-label="Today's focus">
-            <span>FOCUS</span>
-            <strong>Weather-led work</strong>
+          <div className="dashboard-side">
+            <div className="dashboard-date" aria-label="Today's focus">
+              <span>FOCUS</span>
+              <strong>Weather-led work</strong>
+            </div>
+            <div className="dashboard-actions">
+              <button type="button" className="profile-button" onClick={() => setView("settings")}>Update profile</button>
+              <button type="button" className="logout-button dashboard-logout" onClick={logout}>Log out</button>
+            </div>
           </div>
         </header>
 

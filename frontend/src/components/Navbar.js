@@ -18,7 +18,7 @@ const TABS = [
   },
 ];
 
-function Navbar({ currentUser, onLogout, onSettings }) {
+function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) {
   const [active, setActive] = useState("weather");
   const panel = TABS.find((tab) => tab.id === active);
 
@@ -37,7 +37,8 @@ function Navbar({ currentUser, onLogout, onSettings }) {
 
         <div className="nav-tools">
           {currentUser && <span className="signed-in">{currentUser.name}</span>}
-          {onSettings && <button className="logout-button" type="button" onClick={onSettings}>Settings</button>}
+          {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme}>{darkMode ? "Light mode" : "Dark mode"}</button>}
+          {onSettings && <button className="logout-button" type="button" onClick={onSettings}>Profile</button>}
           {onLogout && <button className="logout-button" type="button" onClick={onLogout}>Log out</button>}
         </div>
         <nav>
