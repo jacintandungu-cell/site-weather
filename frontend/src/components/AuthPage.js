@@ -17,9 +17,12 @@ function AuthPage({ mode, onAuthenticated, onBack }) {
     try {
       if (isSignup) {
         const created = await createUser(form);
+        localStorage.setItem("siteweather_token", created.access_token);
         onAuthenticated({ id: created.id, name: form.name, email: form.email, role: form.role });
       } else {
-        onAuthenticated(await login({ email: form.email, password: form.password }));
+        const authenticated = await login({ email: form.email, password: form.password });
+        localStorage.setItem("siteweather_token", authenticated.access_token);
+        onAuthenticated(authenticated);
       }
     } catch (requestError) {
       setError(requestError.message);

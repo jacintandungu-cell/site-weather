@@ -31,6 +31,7 @@ function App() {
 
   const logout = () => {
     localStorage.removeItem("siteweather_user");
+    localStorage.removeItem("siteweather_token");
     setCurrentUser(null);
     setView("landing");
   };

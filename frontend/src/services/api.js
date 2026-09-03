@@ -1,7 +1,9 @@
 const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api";
 
 async function request(path, options) {
-  const res = await fetch(`${API_URL}${path}`, options);
+  const token = localStorage.getItem("siteweather_token");
+  const headers = { ...(options && options.headers), ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+  const res = await fetch(`${API_URL}${path}`, { ...options, headers });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(body.error || "Request failed");
   return body;

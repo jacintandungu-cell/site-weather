@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
@@ -10,10 +11,14 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///siteweather.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev_secret_key")
+app.config['SECRET_KEY'] = os.environ.get(
+    "SECRET_KEY", "siteweather-development-secret-key-change-me"
+)
+app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", app.config['SECRET_KEY'])
 
 db = SQLAlchemy(app)
 Migrate(app, db)
+JWTManager(app)
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
 
 
@@ -67,7 +72,7 @@ class Task(db.Model):
     weather_sensitive = db.Column(db.Boolean, default=False)
     status = db.Column(db.String(50), default="pending")
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
 
 @app.route("/")
@@ -88,7 +93,14 @@ def create_user():
     user.set_password(data["password"])
     db.session.add(user)
     db.session.commit()
-    return jsonify({"message": "User created successfully", "id": user.id}), 201
+    return jsonify({
+        "message": "User created successfully",
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role,
+        "access_token": create_access_token(identity=str(user.id)),
+    }), 201
 
 
 @app.route("/api/auth/login", methods=["POST"])
@@ -102,9 +114,11 @@ def login():
         "name": user.name,
         "email": user.email,
         "role": user.role,
+        "access_token": create_access_token(identity=str(user.id)),
     })
 
 @app.route("/api/users", methods=["GET"])
+@jwt_required()
 def list_users():
     users = User.query.all()
     return jsonify([{
@@ -116,6 +130,7 @@ def list_users():
     } for u in users])
 
 @app.route("/api/users/<int:user_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 def update_user(user_id):
     user = db.session.get(User, user_id)
     if user is None:
@@ -130,6 +145,7 @@ def update_user(user_id):
     return jsonify({"id": user.id, "name": user.name, "email": user.email, "role": user.role})
 
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
+@jwt_required()
 def delete_user(user_id):
     user = db.session.get(User, user_id)
     if user is None:
@@ -141,6 +157,7 @@ def delete_user(user_id):
 
 # ---------------- TASK ROUTES ----------------
 @app.route("/api/tasks", methods=["POST"])
+@jwt_required()
 def create_task():
     data = request.get_json(silent=True) or {}
     if not data.get("title"):
@@ -179,6 +196,7 @@ def create_task():
     }), 201
 
 @app.route("/api/tasks", methods=["GET"])
+@jwt_required()
 def list_tasks():
     tasks = Task.query.all()
     return jsonify([{
@@ -194,6 +212,7 @@ def list_tasks():
     } for t in tasks])
 
 @app.route("/api/tasks/<int:task_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 def update_task(task_id):
     task = db.session.get(Task, task_id)
     if task is None:
@@ -213,6 +232,7 @@ def update_task(task_id):
     return jsonify({"id": task.id, "title": task.title, "status": task.status})
 
 @app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
+@jwt_required()
 def delete_task(task_id):
     task = db.session.get(Task, task_id)
     if task is None:
