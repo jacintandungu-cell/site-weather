@@ -8,7 +8,7 @@ function Footer() {
         plans and risk assessments.
       </p>
       <p className="footer-meta">
-        © 2026 Construction Weather Dashboard · Built by Jacinta · Nairobi, Kenya
+        © 2026 Site Weather · Built by Jacinta · Nairobi, Kenya
       </p>
     </footer>
   );
