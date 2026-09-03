@@ -8,7 +8,7 @@ function UserList() {
   const [formData, setFormData] = useState({ name: "", email: "", role: "", password: "" });
 
   useEffect(() => {
-    getUsers().then(setUsers).catch(() => setError("Error loading users"));
+    getUsers().then(setUsers).catch((requestError) => setError(requestError.message || "Error loading users"));
   }, []);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });

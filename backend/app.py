@@ -24,7 +24,8 @@ Migrate(app, db)
 JWTManager(app)
 frontend_origins = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 CORS(app, resources={
-    r"/api/*": {"origins": [origin.strip() for origin in frontend_origins.split(",")]}
+    r"/api/*": {"origins": [origin.strip() for origin in frontend_origins.split(",")]},
+    r"/": {"origins": [origin.strip() for origin in frontend_origins.split(",")]}
 })
 
 

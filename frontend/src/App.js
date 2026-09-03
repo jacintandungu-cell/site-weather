@@ -11,7 +11,8 @@ import UserSelector from "./components/UserSelector";
 import LandingPage from "./components/LandingPage";
 import AuthPage from "./components/AuthPage";
 import SettingsPage from "./components/SettingsPage";
-import { getTasks, getUsers } from "./services/api";
+import UserList from "./components/UserList";
+import { getApiStatus, getTasks, getUsers } from "./services/api";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
   const [view, setView] = useState("landing");
   const [currentUser, setCurrentUser] = useState(null);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("siteweather_theme") === "dark");
+  const [apiStatus, setApiStatus] = useState("checking");
 
   useEffect(() => {
     localStorage.setItem("siteweather_theme", darkMode ? "dark" : "light");
@@ -77,6 +79,7 @@ function App() {
     };
     fetchTasks();
     getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
+    getApiStatus().then(() => setApiStatus("online")).catch(() => setApiStatus("offline"));
   }, [view]);
 
   const appClassName = darkMode ? "App theme-dark" : "App";
@@ -115,6 +118,9 @@ function App() {
               <span>FOCUS</span>
               <strong>Weather-led work</strong>
             </div>
+            <p className={"api-status api-status-" + apiStatus}>
+              <span aria-hidden="true" /> API {apiStatus}
+            </p>
             <div className="dashboard-actions">
               <button type="button" className="profile-button" onClick={() => setView("settings")}>Update profile</button>
               <button type="button" className="logout-button dashboard-logout" onClick={logout}>Log out</button>
@@ -153,6 +159,10 @@ function App() {
           <TaskForm setTasks={setTasks} setError={setError} users={users} selectedUserId={activeUserId} />
           {error && <ErrorBanner message={error} />}
           <TaskList tasks={activeUserId ? tasks.filter((task) => String(task.user_id) === String(activeUserId)) : tasks} setTasks={setTasks} setError={setError} />
+        </section>
+
+        <section className="users-panel">
+          <UserList />
         </section>
 
       </main>

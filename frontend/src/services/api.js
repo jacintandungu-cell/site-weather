@@ -2,6 +2,13 @@ const configuredApiUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost
 const normalizedApiUrl = configuredApiUrl.replace(/\/+$/, "");
 const API_URL = normalizedApiUrl.endsWith("/api") ? normalizedApiUrl : `${normalizedApiUrl}/api`;
 
+export async function getApiStatus() {
+  const response = await fetch(`${normalizedApiUrl}/`);
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error || "API unavailable");
+  return body;
+}
+
 async function request(path, options) {
   const token = localStorage.getItem("siteweather_token");
   const headers = { ...(options && options.headers), ...(token ? { Authorization: `Bearer ${token}` } : {}) };

@@ -318,6 +318,20 @@ h1, h2, h3, h4, button {
 }
 
 .dashboard-side { min-width: 260px; }
+.api-status { display: flex; align-items: center; gap: .4rem; margin: .9rem 0 0; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; }
+.api-status span { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+.api-status-online span { background: var(--go); }
+.api-status-offline span { background: var(--stop); }
+.users-panel { margin-top: 1.5rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.users-panel h2 { margin-top: 0; color: var(--steel); }
+.users-panel form { display: flex; flex-wrap: wrap; gap: .6rem; }
+.users-panel input, .users-panel button { min-width: 0; padding: .65rem .75rem; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
+.users-panel input { flex: 1 1 150px; background: var(--surface); color: var(--ink); }
+.users-panel button { background: var(--amber); color: #241f14; font-weight: 700; cursor: pointer; }
+.users-panel ul { padding: 0; list-style: none; }
+.users-panel li { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
+.users-panel li button { margin-left: auto; background: transparent; color: var(--ink); }
+.users-panel li button + button { margin-left: 0; }
 
 .dashboard-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.25rem; }
 .profile-button, .dashboard-logout { padding: .65rem .85rem; border-radius: 5px; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
@@ -454,3 +468,4 @@ h1, h2, h3, h4, button {
 .theme-dark .profile-button { color: var(--ink); border-color: #718479; }
 .theme-dark .profile-button:hover { background: rgba(255, 255, 255, .08); }
 .theme-dark .dashboard-empty::after { border-color: rgba(240, 180, 41, .18); }
+.theme-dark .users-panel input { background: #111a15; }
