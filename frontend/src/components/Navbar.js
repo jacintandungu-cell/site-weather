@@ -30,7 +30,7 @@ function Navbar({ currentUser, onLogout, onSettings }) {
             🏗
           </span>
           <div>
-            <h1>Construction Weather Dashboard</h1>
+            <h1>Site Weather</h1>
             <p>Weather turned into site decisions</p>
           </div>
         </div>
