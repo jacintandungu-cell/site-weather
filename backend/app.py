@@ -43,6 +43,12 @@ def internal_error(error):
     return jsonify({"error": "Internal server error"}), 500
 
 
+@app.errorhandler(Exception)
+def unhandled_error(error):
+    db.session.rollback()
+    return jsonify({"error": "Internal server error"}), 500
+
+
 # User model
 class User(db.Model):
     __tablename__ = "users"
