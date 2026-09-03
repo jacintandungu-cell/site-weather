@@ -1,4 +1,4 @@
-const API_URL = "/api"; // proxy forwards to Flask backend
+const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api";
 
 export async function getTasks() {
   const res = await fetch(`${API_URL}/tasks`);

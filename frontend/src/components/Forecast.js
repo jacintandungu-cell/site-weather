@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchForecast } from "../utils/api";
 import { summariseDays, planningTip, STATUS } from "../utils/advisory";
+import ErrorBanner from "./ErrorBanner";
 
 function windowText(day) {
   if (day.workableHours === null) {
@@ -12,17 +13,20 @@ function windowText(day) {
 function Forecast({ city }) {
   const [days, setDays] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setLoading(true);
+    setError("");
 
     fetchForecast(city)
       .then((data) => {
         setDays(summariseDays(data.list));
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
         setDays([]);
+        setError(err.message || "Unable to load the forecast");
         setLoading(false);
       });
   }, [city]);
@@ -37,7 +41,7 @@ function Forecast({ city }) {
   }
 
   if (days.length === 0) {
-    return null;
+    return error ? <ErrorBanner message={error} /> : null;
   }
 
   const tip = planningTip(days);

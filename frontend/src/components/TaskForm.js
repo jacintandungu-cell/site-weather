@@ -11,9 +11,13 @@ function TaskForm({ setTasks, setError }) {
     user_id: ""
   });
   const [users, setUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
-    getUsers().then(setUsers).catch(() => setError("Error loading users"));
+    getUsers()
+      .then(setUsers)
+      .catch((error) => setError(error.message || "Error loading users"))
+      .finally(() => setLoadingUsers(false));
   }, [setError]);
 
   const handleChange = (e) => {
@@ -49,8 +53,8 @@ function TaskForm({ setTasks, setError }) {
         Weather Sensitive?
         <input type="checkbox" name="weather_sensitive" checked={formData.weather_sensitive} onChange={handleChange} />
       </label>
-      <select name="user_id" value={formData.user_id} onChange={handleChange} required>
-        <option value="">Assign to user</option>
+      <select name="user_id" value={formData.user_id} onChange={handleChange} required disabled={loadingUsers}>
+        <option value="">{loadingUsers ? "Loading users..." : "Assign to user"}</option>
         {users.map((u) => (
           <option key={u.id} value={u.id}>
             {u.name} ({u.role})

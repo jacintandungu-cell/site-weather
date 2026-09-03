@@ -25,8 +25,12 @@ function UserList() {
   };
 
   const handleDelete = async (id) => {
-    await deleteUser(id);
-    setUsers(await getUsers());
+    try {
+      await deleteUser(id);
+      setUsers(await getUsers());
+    } catch (error) {
+      setError(error.message || "Error deleting user");
+    }
   };
 
   return (
