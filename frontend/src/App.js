@@ -91,6 +91,18 @@ function App() {
       <Navbar currentUser={currentUser} onLogout={logout} onSettings={() => setView("settings")} />
 
       <main className="content">
+        <header className="dashboard-heading">
+          <div>
+            <p className="eyebrow">FIELD DESK / TODAY</p>
+            <h2>Plan the shift with a clearer view.</h2>
+            <p>Check conditions, find the workable window, then keep the crew aligned.</p>
+          </div>
+          <div className="dashboard-date" aria-label="Today's focus">
+            <span>FOCUS</span>
+            <strong>Weather-led work</strong>
+          </div>
+        </header>
+
         <SearchBar setCity={setCity} />
 
         {city ? (
@@ -99,7 +111,8 @@ function App() {
             <ForecastPanel city={city} />
           </>
         ) : (
-          <section className="panel empty">
+          <section className="panel empty dashboard-empty">
+            <span className="empty-mark" aria-hidden="true">01</span>
             <h2>Plan the shift before you lose it to the weather</h2>
             <p>
               Enter a site location to get a go / caution / stop call for each trade, the
@@ -110,7 +123,13 @@ function App() {
         )}
 
         <section className="tasks-panel">
-          <h2>Construction Tasks</h2>
+          <header className="tasks-heading">
+            <div>
+              <p className="eyebrow">WORK QUEUE</p>
+              <h2>Construction Tasks</h2>
+            </div>
+            <span className="task-count">{tasks.length} tracked</span>
+          </header>
           <UserSelector users={users} selectedUserId={activeUserId} onChange={setActiveUserId} />
           <TaskForm setTasks={setTasks} setError={setError} users={users} selectedUserId={activeUserId} />
           {error && <ErrorBanner message={error} />}
