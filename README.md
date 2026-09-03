@@ -73,11 +73,18 @@ This dashboard solves these challenges by:
 - Weather API key (e.g., OpenWeatherMap)
 
 ### Installation
-Clone the repository and install dependencies:
+Clone the repository and install frontend dependencies:
 ```bash
 git clone https://github.com/yourusername/construction-weather-dashboard.git
 cd construction-weather-dashboard
+cd frontend
 npm install
+```
+
+Install backend dependencies:
+```bash
+pip install -r backend/requirements.txt
+```
 Configuration
 Create a .env file in the root:
 
@@ -106,10 +113,11 @@ A Google Map with directions to the site
 📂 Project Structure
 Code
 construction-weather-dashboard/
-├── public/
-│   ├── construction-bg.jpg
-│   └── index.html
-├── src/
+├── frontend/
+│   ├── public/
+│   │   ├── construction-bg.jpg
+│   │   └── index.html
+│   └── src/
 │   ├── components/
 │   │   ├── Navbar.js
 │   │   ├── SearchBar.js
@@ -119,9 +127,15 @@ construction-weather-dashboard/
 │   ├── utils/
 │   │   ├── advisory.js   # site thresholds & guidance rules
 │   │   └── api.js        # weather API calls
-│   ├── App.js
-│   ├── App.css
-│   └── index.js
+│       ├── App.js
+│       ├── App.css
+│       └── index.js
+├── backend/
+│   ├── app.py
+│   ├── config.py
+│   ├── models.py
+│   ├── routes.py
+│   └── requirements.txt
 ├── package.json
 └── README.md
 👩‍💻 Author
