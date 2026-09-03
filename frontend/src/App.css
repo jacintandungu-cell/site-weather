@@ -263,11 +263,16 @@ h1, h2, h3, h4, button {
 .auth-page { display: grid; place-items: center; position: relative; padding: 2rem 1.25rem; }
 .back-link { position: absolute; top: 2rem; left: max(1.25rem, calc((100% - 1080px) / 2)); border: 0; background: transparent; color: var(--steel); cursor: pointer; }
 .auth-card { width: min(100%, 440px); padding: 2.2rem; background: var(--surface); border-top: 5px solid var(--amber); box-shadow: var(--shadow); }
+.settings-page { flex: 1; display: grid; place-items: center; padding: 2rem 1.25rem; }
+.settings-card { position: relative; width: min(100%, 540px); padding: 4.5rem 2.2rem 2.2rem; background: var(--surface); border-top: 5px solid var(--amber); box-shadow: var(--shadow); }
+.settings-card .back-link { top: 1.5rem; left: 2.2rem; }
+.success-message { padding: .7rem; background: var(--go-soft); color: var(--go); }
 .auth-card h1 { margin: .5rem 0; color: var(--steel); font-size: 2.1rem; }
 .auth-intro { color: var(--muted); }
 .auth-form { display: grid; gap: 1rem; margin-top: 1.5rem; }
 .auth-form label { display: grid; gap: .4rem; color: var(--muted); font-size: .85rem; font-weight: 600; }
 .auth-form input { width: 100%; padding: .8rem; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
+.forgot-link { border: 0; background: transparent; color: var(--steel); cursor: pointer; text-decoration: underline; }
 
 @media (max-width: 700px) {
   .navbar-top { align-items: flex-start; flex-direction: column; }

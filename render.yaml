@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: construction-weather-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask --app app db upgrade && gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: construction-weather-db
+          property: connectionString
+      - key: FRONTEND_URL
+        fromService:
+          type: static
+          name: construction-weather-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+  - type: static
+    name: construction-weather-frontend
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        fromService:
+          type: web
+          name: construction-weather-api
+          envVarKey: RENDER_EXTERNAL_URL
+
+databases:
+  - name: construction-weather-db
+    databaseName: siteweather
+    user: siteweather
+    plan: free

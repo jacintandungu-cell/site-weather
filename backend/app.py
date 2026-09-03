@@ -9,7 +9,10 @@ import os
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///siteweather.db"
+database_url = os.environ.get("DATABASE_URL", "sqlite:///siteweather.db")
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get(
     "SECRET_KEY", "siteweather-development-secret-key-change-me"
@@ -19,7 +22,10 @@ app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", app.config['SECR
 db = SQLAlchemy(app)
 Migrate(app, db)
 JWTManager(app)
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
+frontend_origins = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+CORS(app, resources={
+    r"/api/*": {"origins": [origin.strip() for origin in frontend_origins.split(",")]}
+})
 
 
 @app.errorhandler(400)

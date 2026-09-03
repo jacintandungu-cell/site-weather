@@ -110,6 +110,16 @@ Forecast cards
 
 A Google Map with directions to the site
 
+## Deploy on Render
+
+The repository includes `render.yaml` for a Render Blueprint with:
+
+- a Python web service for the Flask API;
+- a PostgreSQL database with migrations applied during deployment; and
+- a static site for the React frontend.
+
+In Render, choose **New > Blueprint**, connect this repository, and deploy the blueprint. Add `REACT_APP_WEATHER_API_KEY` to the frontend service environment variables before rebuilding if weather data is enabled. Render provides the API and frontend URLs to each service automatically.
+
 📂 Project Structure
 Code
 construction-weather-dashboard/

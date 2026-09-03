@@ -10,6 +10,7 @@ import ErrorBanner from "./components/ErrorBanner";
 import UserSelector from "./components/UserSelector";
 import LandingPage from "./components/LandingPage";
 import AuthPage from "./components/AuthPage";
+import SettingsPage from "./components/SettingsPage";
 import { getTasks, getUsers } from "./services/api";
 import "./App.css";
 
@@ -34,6 +35,11 @@ function App() {
     localStorage.removeItem("siteweather_token");
     setCurrentUser(null);
     setView("landing");
+  };
+
+  const updateCurrentUser = (user) => {
+    setCurrentUser(user);
+    localStorage.setItem("siteweather_user", JSON.stringify(user));
   };
 
   useEffect(() => {
@@ -73,12 +79,16 @@ function App() {
   }
 
   if (view === "login" || view === "signup") {
-    return <div className="App"><AuthPage mode={view} onAuthenticated={authenticate} onBack={() => setView("landing")} /><Footer /></div>;
+    return <div className="App"><AuthPage mode={view} onAuthenticated={authenticate} onBack={() => setView("landing")} onSwitchMode={setView} /><Footer /></div>;
+  }
+
+  if (view === "settings") {
+    return <div className="App"><SettingsPage user={currentUser} onUpdated={updateCurrentUser} onClose={() => setView("dashboard")} /><Footer /></div>;
   }
 
   return (
     <div className="App">
-      <Navbar currentUser={currentUser} onLogout={logout} />
+      <Navbar currentUser={currentUser} onLogout={logout} onSettings={() => setView("settings")} />
 
       <main className="content">
         <SearchBar setCity={setCity} />

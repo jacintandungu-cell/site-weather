@@ -1,4 +1,6 @@
-const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api";
+const configuredApiUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+const normalizedApiUrl = configuredApiUrl.replace(/\/+$/, "");
+const API_URL = normalizedApiUrl.endsWith("/api") ? normalizedApiUrl : `${normalizedApiUrl}/api`;
 
 async function request(path, options) {
   const token = localStorage.getItem("siteweather_token");
