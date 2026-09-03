@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -6,12 +7,14 @@ import os
 
 app = Flask(__name__)
 
-# Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://siteweather_user:mypassword@localhost/siteweather"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    "DATABASE_URL", "sqlite:///siteweather.db"
+).replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 db = SQLAlchemy(app)
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
 
 
 # User model
@@ -58,7 +61,12 @@ def index():
 # ---------------- USER ROUTES ----------------
 @app.route("/api/users", methods=["POST"])
 def create_user():
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
+    required = ["name", "email", "role", "password"]
+    if any(not data.get(field) for field in required):
+        return jsonify({"error": "name, email, role, and password are required"}), 400
+    if User.query.filter_by(email=data["email"]).first():
+        return jsonify({"error": "email already exists"}), 409
     user = User(name=data["name"], email=data["email"], role=data["role"])
     user.set_password(data["password"])
     db.session.add(user)
@@ -73,17 +81,20 @@ def list_users():
         "name": u.name,
         "email": u.email,
         "role": u.role
+        ,"task_count": len(u.tasks)
     } for u in users])
 
 @app.route("/api/users/<int:user_id>", methods=["PUT"])
 def update_user(user_id):
     user = User.query.get_or_404(user_id)
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     user.name = data.get("name", user.name)
     user.email = data.get("email", user.email)
     user.role = data.get("role", user.role)
+    if "password" in data:
+        user.set_password(data["password"])
     db.session.commit()
-    return jsonify({"message": "User updated"})
+    return jsonify({"id": user.id, "name": user.name, "email": user.email, "role": user.role})
 
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
@@ -96,7 +107,11 @@ def delete_user(user_id):
 # ---------------- TASK ROUTES ----------------
 @app.route("/api/tasks", methods=["POST"])
 def create_task():
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
+    if not data.get("title"):
+        return jsonify({"error": "title is required"}), 400
+    if data.get("user_id") is not None and not db.session.get(User, data["user_id"]):
+        return jsonify({"error": "user_id does not exist"}), 400
     scheduled_date = None
     if data.get("scheduled_date"):
         try:
@@ -146,13 +161,19 @@ def list_tasks():
 @app.route("/api/tasks/<int:task_id>", methods=["PUT"])
 def update_task(task_id):
     task = Task.query.get_or_404(task_id)
-    data = request.get_json()
-    task.title = data.get("title", task.title)
-    task.description = data.get("description", task.description)
-    task.status = data.get("status", task.status)
-    task.user_id = data.get("user_id", task.user_id)
+    data = request.get_json(silent=True) or {}
+    if "scheduled_date" in data:
+        try:
+            task.scheduled_date = datetime.strptime(data["scheduled_date"], "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid date format"}), 400
+    if "user_id" in data and data["user_id"] is not None and not db.session.get(User, data["user_id"]):
+        return jsonify({"error": "user_id does not exist"}), 400
+    for field in ["title", "description", "location", "status", "weather_sensitive", "user_id"]:
+        if field in data:
+            setattr(task, field, data[field])
     db.session.commit()
-    return jsonify({"message": "Task updated"})
+    return jsonify({"id": task.id, "title": task.title, "status": task.status})
 
 @app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
