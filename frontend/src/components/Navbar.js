@@ -40,7 +40,7 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme, si
   return (
     <header className={sidebarOpen ? "navbar" : "navbar navbar-collapsed"}>
       <button className="sidebar-trigger" type="button" onClick={onToggleSidebar} aria-label={sidebarOpen ? "Hide navigation" : "Show navigation"}>
-        <span aria-hidden="true">{sidebarOpen ? "‹" : "›"}</span>
+        <span aria-hidden="true">{sidebarOpen ? "×" : "☰"}</span>
       </button>
       <aside className="sidebar-nav">
         <div className="brand">

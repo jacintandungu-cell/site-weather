@@ -216,13 +216,14 @@ h1, h2, h3, h4, button {
   width: 270px;
   min-height: 100vh;
   padding: 0;
-  border-right: 3px solid var(--amber);
+  border-right: 0;
   transition: width .25s ease, transform .25s ease;
 }
-.navbar-collapsed { width: 0; border-right: 0; }
+.navbar-collapsed { width: 0; }
 .navbar-collapsed .sidebar-nav { transform: translateX(-100%); }
-.sidebar-trigger { position: absolute; z-index: 2; top: 1.25rem; right: -1.15rem; display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border: 1px solid var(--amber); border-radius: 50%; background: var(--steel); color: var(--amber); font: 1.5rem/1 "Space Grotesk", sans-serif; cursor: pointer; }
-.sidebar-trigger:hover { background: var(--amber); color: var(--steel); }
+.sidebar-trigger { position: absolute; z-index: 2; top: 1.1rem; right: -1.15rem; display: grid; width: 2.35rem; height: 2.35rem; place-items: center; border: 2px solid var(--amber); border-radius: 8px; background: var(--amber); box-shadow: 0 5px 14px rgba(16, 37, 29, .25); color: #18362d; font: 1.35rem/1 "Space Grotesk", sans-serif; cursor: pointer; transition: transform .2s ease, background-color .2s ease; }
+.sidebar-trigger:hover { background: #ffd36a; transform: translateX(2px); }
+.sidebar-trigger:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 
 .sidebar-nav, .navbar-main, .brand, .nav-tools {
   display: flex;
