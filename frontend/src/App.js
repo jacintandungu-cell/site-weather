@@ -85,7 +85,7 @@ function App() {
   const appClassName = darkMode ? "App theme-dark" : "App";
 
   if (view === "landing") {
-    return <div className={appClassName}><LandingPage onLogin={() => setView("login")} onSignup={() => setView("signup")} /><Footer /></div>;
+    return <div className={appClassName}><LandingPage onLogin={() => setView("login")} onSignup={() => setView("signup")} darkMode={darkMode} onToggleTheme={() => setDarkMode((enabled) => !enabled)} /><Footer /></div>;
   }
 
   if (view === "login" || view === "signup") {

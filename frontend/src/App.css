@@ -170,12 +170,17 @@ body {
 .footer {
   margin-top: auto;
   background: var(--steel);
-  color: #b6b0a6;
-  padding: 1.25rem 1.5rem;
+  color: #d4e1d8;
+  padding: 1.4rem 1.5rem;
   border-top: 4px solid var(--amber);
-  text-align: center;
   font-size: 0.82rem;
 }
+
+.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1080px; margin: 0 auto; }
+.footer p { margin: 0; }
+.footer-brand { color: #fff; font-family: "Space Grotesk", sans-serif; font-size: .9rem; font-weight: 700; letter-spacing: .08em; }
+.footer-brand span { color: var(--amber); }
+.footer-meta { color: #b7c8bd; }
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
@@ -248,6 +253,9 @@ h1, h2, h3, h4, button {
 
 .landing-page, .auth-page { flex: 1; min-height: 0; }
 .landing-page { max-width: 1080px; width: 100%; margin: auto; padding: 4rem 1.25rem 3rem; }
+.landing-toolbar { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+.landing-theme-toggle { color: var(--steel); border-color: #9aa99f; }
+.landing-theme-toggle:hover { border-color: var(--amber); }
 .landing-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); gap: 3rem; align-items: center; }
 .landing-copy { max-width: 650px; }
 .eyebrow { color: #b5790e; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
@@ -273,6 +281,14 @@ h1, h2, h3, h4, button {
 .landing-cta h2 { margin: .35rem 0 0; font-size: clamp(1.4rem, 3vw, 2.2rem); }
 .landing-cta .eyebrow { color: var(--amber); }
 .landing-cta .button { flex-shrink: 0; }
+.landing-faq { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--line); }
+.faq-list { border-top: 1px solid var(--line); }
+.faq-list details { border-bottom: 1px solid var(--line); }
+.faq-list summary { display: flex; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; color: var(--steel); font-family: "Space Grotesk", sans-serif; font-weight: 600; cursor: pointer; list-style: none; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: "+"; color: var(--amber); font-size: 1.4rem; line-height: 1; }
+.faq-list details[open] summary::after { content: "-"; }
+.faq-list details p { max-width: 720px; margin: -.25rem 0 1.1rem; color: var(--muted); }
 .auth-page { display: grid; place-items: center; position: relative; padding: 2rem 1.25rem; }
 .back-link { position: absolute; top: 2rem; left: max(1.25rem, calc((100% - 1080px) / 2)); border: 0; background: transparent; color: var(--steel); cursor: pointer; }
 .auth-card { width: min(100%, 440px); padding: 2.2rem; background: var(--surface); border-top: 5px solid var(--amber); box-shadow: var(--shadow); }
@@ -456,6 +472,7 @@ h1, h2, h3, h4, button {
   .search-bar { flex-direction: column; }
   .dashboard-empty { padding: 1.5rem; }
   .tasks-heading { align-items: flex-start; flex-direction: column; }
+  .footer-inner { align-items: flex-start; flex-direction: column; }
 }
 
 .theme-dark {
@@ -475,6 +492,10 @@ h1, h2, h3, h4, button {
 .theme-dark { background-color: var(--bg); color: var(--ink); }
 .theme-dark body { background-image: linear-gradient(120deg, rgba(50, 78, 63, .2), transparent 45%), repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px); }
 .theme-dark .navbar, .theme-dark .footer { background: #0b120e; }
+.theme-dark .footer { color: #e5eee8; border-top-color: var(--amber); }
+.theme-dark .footer-brand { color: #f5faf6; }
+.theme-dark .footer-brand span { color: #f0b429; }
+.theme-dark .footer-meta { color: #c2d2c8; }
 .theme-dark .panel, .theme-dark .tasks-panel, .theme-dark .auth-card, .theme-dark .settings-card { background: var(--surface); }
 .theme-dark .search { background: #20352a; border-color: #3d5b49; }
 .theme-dark .search::before { background: var(--bg); }
@@ -485,3 +506,4 @@ h1, h2, h3, h4, button {
 .theme-dark .profile-button:hover { background: rgba(255, 255, 255, .08); }
 .theme-dark .dashboard-empty::after { border-color: rgba(240, 180, 41, .18); }
 .theme-dark .users-panel input { background: #111a15; }
+.theme-dark .landing-theme-toggle { color: var(--ink); border-color: #718479; }

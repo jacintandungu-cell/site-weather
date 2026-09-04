@@ -1,8 +1,13 @@
 import React from "react";
 
-function LandingPage({ onLogin, onSignup }) {
+function LandingPage({ onLogin, onSignup, darkMode, onToggleTheme }) {
   return (
     <main className="landing-page">
+      <div className="landing-toolbar">
+        <button type="button" className="theme-toggle landing-theme-toggle" onClick={onToggleTheme}>
+          {darkMode ? "Light mode" : "Dark mode"}
+        </button>
+      </div>
       <section className="landing-hero">
         <div className="landing-copy">
           <p className="eyebrow">SITEWEATHER / FIELD OPERATIONS</p>
@@ -47,6 +52,27 @@ function LandingPage({ onLogin, onSignup }) {
             <h2>Create your field desk today.</h2>
           </div>
           <button className="button button-primary" onClick={onSignup}>Create an account</button>
+        </div>
+      </section>
+
+      <section className="landing-faq" aria-labelledby="faq-heading">
+        <div className="story-intro">
+          <p className="eyebrow">QUICK ANSWERS</p>
+          <h2 id="faq-heading">Questions from the site office.</h2>
+        </div>
+        <div className="faq-list">
+          <details>
+            <summary>Who is SiteWeather for?</summary>
+            <p>It is built for site managers, project managers, engineers, safety officers, clients, and anyone coordinating weather-sensitive work.</p>
+          </details>
+          <details>
+            <summary>What does the weather assessment show?</summary>
+            <p>It combines current conditions with a five-day forecast to give trade-by-trade guidance, workable windows, and actions for the shift.</p>
+          </details>
+          <details>
+            <summary>Can I manage tasks as well as check weather?</summary>
+            <p>Yes. Your field desk lets you create, assign, update, and remove construction tasks, including weather-sensitive work.</p>
+          </details>
         </div>
       </section>
     </main>
