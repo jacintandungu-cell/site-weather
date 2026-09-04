@@ -128,24 +128,31 @@ function App() {
           </div>
         </header>
 
-        <SearchBar setCity={setCity} />
+        <section id="site-conditions" className="dashboard-route-section">
+          <SearchBar setCity={setCity} />
 
-        {city ? (
-          <>
+          {city ? (
             <WeatherResults city={city} />
-            <ForecastPanel city={city} />
-          </>
-        ) : (
-          <section className="panel empty dashboard-empty">
-            <span className="empty-mark" aria-hidden="true">01</span>
-            <h2>Plan the shift before you lose it to the weather</h2>
-            <p>
-              Enter a site location to get a go / caution / stop call for each trade, the
-              control measures to put in place, and the best working window over the next
-              five days.
-            </p>
-          </section>
-        )}
+          ) : (
+            <section className="panel empty dashboard-empty">
+              <span className="empty-mark" aria-hidden="true">01</span>
+              <h2>Plan the shift before you lose it to the weather</h2>
+              <p>
+                Enter a site location to get a go / caution / stop call for each trade, the
+                control measures to put in place, and the best working window over the next
+                five days.
+              </p>
+            </section>
+          )}
+        </section>
+
+        {city && <ForecastPanel city={city} />}
+
+        <section id="about" className="panel dashboard-about">
+          <p className="eyebrow">ABOUT SITEWEATHER</p>
+          <h2>Make the next site decision with evidence.</h2>
+          <p>SiteWeather helps construction teams turn changing conditions into a practical plan, so people, materials, and weather-sensitive work are coordinated before the shift begins.</p>
+        </section>
 
         <section className="operations-summary" aria-label="Operations summary">
           <article><span>MY TASKS</span><strong>{userTasks.length}</strong><small>Total assigned</small></article>

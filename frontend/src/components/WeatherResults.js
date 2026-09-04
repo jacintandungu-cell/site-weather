@@ -43,7 +43,7 @@ function WeatherResults({ city }) {
   const advice = assessSite(weather);
 
   return (
-    <section className="panel" id="weather">
+    <section className="panel">
       <header className="panel-head">
         <div>
           <p className="eyebrow">Site conditions</p>

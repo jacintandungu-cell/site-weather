@@ -10,7 +10,7 @@ export async function getApiStatus() {
 }
 
 export async function getWeather(endpoint, city) {
-  return request(`/weather/${endpoint}?city=${encodeURIComponent(city)}`);
+  return request(`/weather/${endpoint === "weather" ? "current" : "forecast"}?city=${encodeURIComponent(city)}`);
 }
 
 async function request(path, options) {

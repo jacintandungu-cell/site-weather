@@ -12,7 +12,7 @@ const TABS = [
     body: "Weather delays and rework are avoidable when the forecast is read against real site limits. This dashboard applies those limits for you and tells you what to do, not just what the weather is.",
   },
   {
-    id: "weather",
+    id: "site-conditions",
     label: "Site conditions",
     body: "A go / caution / stop call for every trade on site - concrete, roofing, lifting, painting, earthworks, scaffolding, masonry and general labour - with the control measures to put in place before the shift starts.",
   },
@@ -29,7 +29,7 @@ function initials(name = "") {
 }
 
 function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme, sidebarOpen, onToggleSidebar }) {
-  const [active, setActive] = useState("weather");
+  const [active, setActive] = useState("site-conditions");
 
   const selectTab = (tab) => {
     setActive(tab.id);

@@ -172,9 +172,11 @@ def openweather(endpoint, city):
         return jsonify({"error": "Weather service is unavailable"}), 502
 
 
-@app.route("/api/weather/<endpoint>", methods=["GET"])
-def weather(endpoint):
-    if endpoint not in {"weather", "forecast"}:
+@app.route("/api/weather/<view>", methods=["GET"])
+def weather(view):
+    endpoints = {"current": "weather", "forecast": "forecast"}
+    endpoint = endpoints.get(view)
+    if endpoint is None:
         return jsonify({"error": "Unknown weather endpoint"}), 404
     city = request.args.get("city", "").strip()
     if not city:
