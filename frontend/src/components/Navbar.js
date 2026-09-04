@@ -28,7 +28,7 @@ function initials(name = "") {
     .join("");
 }
 
-function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) {
+function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme, sidebarOpen, onToggleSidebar }) {
   const [active, setActive] = useState("weather");
 
   const selectTab = (tab) => {
@@ -38,7 +38,10 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
   };
 
   return (
-    <header className="navbar">
+    <header className={sidebarOpen ? "navbar" : "navbar navbar-collapsed"}>
+      <button className="sidebar-trigger" type="button" onClick={onToggleSidebar} aria-label={sidebarOpen ? "Hide navigation" : "Show navigation"}>
+        <span aria-hidden="true">{sidebarOpen ? "‹" : "›"}</span>
+      </button>
       <aside className="sidebar-nav">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">🏗</span>
@@ -69,6 +72,7 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
         </nav>
 
         <div className="sidebar-bottom">
+          <span className="sidebar-label">ACCOUNT</span>
           <div className="sidebar-actions">
             {onSettings && <button className="sidebar-action" type="button" onClick={onSettings}>Profile settings</button>}
             {onLogout && <button className="sidebar-action sidebar-logout" type="button" onClick={onLogout}>Log out</button>}

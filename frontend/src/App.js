@@ -24,6 +24,7 @@ function App() {
   const [view, setView] = useState("landing");
   const [currentUser, setCurrentUser] = useState(null);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("siteweather_theme") === "dark");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     localStorage.setItem("siteweather_theme", darkMode ? "dark" : "light");
@@ -96,15 +97,18 @@ function App() {
 
   return (
     <div className={appClassName}>
-      <Navbar
-        currentUser={currentUser}
-        onLogout={logout}
-        onSettings={() => setView("settings")}
-        darkMode={darkMode}
-        onToggleTheme={() => setDarkMode((enabled) => !enabled)}
-      />
+      <main className={sidebarOpen ? "dashboard-shell" : "dashboard-shell sidebar-collapsed"}>
+        <Navbar
+          currentUser={currentUser}
+          onLogout={logout}
+          onSettings={() => setView("settings")}
+          darkMode={darkMode}
+          onToggleTheme={() => setDarkMode((enabled) => !enabled)}
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((open) => !open)}
+        />
 
-      <main className="content">
+        <section className="content">
         <header className="dashboard-heading">
           <div>
             <p className="eyebrow">FIELD DESK / TODAY</p>
@@ -159,6 +163,7 @@ function App() {
           <UserList />
         </section>
 
+        </section>
       </main>
 
       <Footer />
