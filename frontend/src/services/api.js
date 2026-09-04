@@ -16,9 +16,17 @@ export async function getWeather(endpoint, city) {
 async function request(path, options) {
   const token = localStorage.getItem("siteweather_token");
   const headers = { ...(options && options.headers), ...(token ? { Authorization: `Bearer ${token}` } : {}) };
-  const res = await fetch(`${API_URL}${path}`, { ...options, headers });
+  let res;
+  try {
+    res = await fetch(`${API_URL}${path}`, { ...options, headers });
+  } catch {
+    throw new Error("API unavailable. Start the backend on port 5000 and try again.");
+  }
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body.error || "Request failed");
+  if (!res.ok) {
+    const resource = path.split("?")[0].split("/").filter(Boolean).pop() || "request";
+    throw new Error(body.error || `${resource.charAt(0).toUpperCase() + resource.slice(1)} request failed (${res.status})`);
+  }
   return body;
 }
 
