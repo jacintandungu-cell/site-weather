@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY")
 if not app.config['SECRET_KEY'] or not app.config['JWT_SECRET_KEY']:
-    if os.environ.get("FLASK_ENV") == "production":
+    if os.environ.get("FLASK_ENV") == "production" or os.environ.get("RENDER"):
         raise RuntimeError("SECRET_KEY and JWT_SECRET_KEY must be configured in production")
     app.config['SECRET_KEY'] = app.config['SECRET_KEY'] or "local-development-secret-key"
     app.config['JWT_SECRET_KEY'] = app.config['JWT_SECRET_KEY'] or app.config['SECRET_KEY']
