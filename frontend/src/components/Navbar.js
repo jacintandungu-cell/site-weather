@@ -31,6 +31,12 @@ function initials(name = "") {
 function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) {
   const [active, setActive] = useState("weather");
 
+  const selectTab = (tab) => {
+    setActive(tab.id);
+    const target = document.getElementById(tab.id);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <header className="navbar">
       <aside className="sidebar-nav">
@@ -52,7 +58,7 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
                 <button
                   type="button"
                   className={active === tab.id ? "tab tab-active" : "tab"}
-                  onClick={() => setActive(tab.id)}
+                  onClick={() => selectTab(tab)}
                 >
                   <span className="tab-index">0{TABS.indexOf(tab) + 1}</span>
                   {tab.label}

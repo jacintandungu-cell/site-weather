@@ -230,7 +230,7 @@ h1, h2, h3, h4, button {
   min-height: 100vh;
   flex-direction: column;
   align-items: stretch;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 2rem;
   padding: 1.25rem 1.25rem 1rem;
   background: #10251d;
@@ -381,6 +381,8 @@ h1, h2, h3, h4, button {
 .notification-button:hover { border-color: var(--amber); }
 .sidebar-user { padding-bottom: 1.1rem; border-bottom: 1px solid #315344; }
 .sidebar-user .sidebar-label { margin-bottom: .65rem; }
+.sidebar-nav nav { margin-top: 2rem; }
+.sidebar-bottom { margin-top: auto; }
 
 .dashboard-date {
   min-width: 170px;
