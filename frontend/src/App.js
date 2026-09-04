@@ -7,11 +7,9 @@ import Footer from "./components/Footer";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import ErrorBanner from "./components/ErrorBanner";
-import UserSelector from "./components/UserSelector";
 import LandingPage from "./components/LandingPage";
 import AuthPage from "./components/AuthPage";
 import SettingsPage from "./components/SettingsPage";
-import UserList from "./components/UserList";
 import { getTasks, getUsers } from "./services/api";
 import "./App.css";
 
@@ -81,6 +79,10 @@ function App() {
     getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
   }, [view]);
 
+  const userTasks = tasks.filter((task) => String(task.user_id) === String(activeUserId));
+  const pendingTasks = userTasks.filter((task) => task.status === "pending").length;
+  const weatherTasks = userTasks.filter((task) => task.weather_sensitive).length;
+
   const appClassName = darkMode ? "App theme-dark" : "App";
 
   if (view === "landing") {
@@ -145,22 +147,23 @@ function App() {
           </section>
         )}
 
+        <section className="operations-summary" aria-label="Operations summary">
+          <article><span>MY TASKS</span><strong>{userTasks.length}</strong><small>Total assigned</small></article>
+          <article><span>TO COMPLETE</span><strong>{pendingTasks}</strong><small>Pending actions</small></article>
+          <article><span>WEATHER WATCH</span><strong>{weatherTasks}</strong><small>Weather-sensitive</small></article>
+        </section>
+
         <section className="tasks-panel">
           <header className="tasks-heading">
             <div>
-              <p className="eyebrow">WORK QUEUE</p>
-              <h2>Construction Tasks</h2>
+              <p className="eyebrow">TODAY'S DELIVERY</p>
+              <h2>Shift plan</h2>
             </div>
-            <span className="task-count">{tasks.length} tracked</span>
+            <span className="task-count">{userTasks.length} assigned</span>
           </header>
-          <UserSelector users={users} selectedUserId={activeUserId} onChange={setActiveUserId} />
           <TaskForm setTasks={setTasks} setError={setError} users={users} selectedUserId={activeUserId} />
           {error && <ErrorBanner message={error} />}
-          <TaskList tasks={activeUserId ? tasks.filter((task) => String(task.user_id) === String(activeUserId)) : tasks} setTasks={setTasks} setError={setError} />
-        </section>
-
-        <section className="users-panel">
-          <UserList />
+          <TaskList tasks={userTasks} setTasks={setTasks} setError={setError} />
         </section>
 
         </section>

@@ -79,8 +79,6 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme, si
           </div>
         </div>
       </aside>
-      <div className="navbar-main">
-      </div>
     </header>
   );
 }
