@@ -30,7 +30,6 @@ function initials(name = "") {
 
 function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) {
   const [active, setActive] = useState("weather");
-  const panel = TABS.find((tab) => tab.id === active);
 
   return (
     <header className="navbar">
@@ -42,6 +41,8 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
             <p>Weather turned into site decisions</p>
           </div>
         </div>
+
+        {currentUser && <div className="sidebar-user"><span className="sidebar-label">SIGNED IN AS</span><div className="user-identity"><span className="user-avatar" aria-hidden="true">{initials(currentUser.name)}</span><span className="signed-in">{currentUser.name}</span></div></div>}
 
         <nav aria-label="Dashboard navigation">
           <span className="sidebar-label">WORKSPACE</span>
@@ -62,11 +63,6 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
         </nav>
 
         <div className="sidebar-bottom">
-          {currentUser && <div className="user-identity"><span className="user-avatar" aria-hidden="true">{initials(currentUser.name)}</span><span className="signed-in">{currentUser.name}</span></div>}
-          {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
-            <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
-            <span>{darkMode ? "Light mode" : "Dark mode"}</span>
-          </button>}
           <div className="sidebar-actions">
             {onSettings && <button className="sidebar-action" type="button" onClick={onSettings}>Profile settings</button>}
             {onLogout && <button className="sidebar-action sidebar-logout" type="button" onClick={onLogout}>Log out</button>}
@@ -74,7 +70,6 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
         </div>
       </aside>
       <div className="navbar-main">
-        <p className="navbar-panel">{panel.body}</p>
       </div>
     </header>
   );

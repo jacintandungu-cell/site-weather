@@ -5,7 +5,13 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from datetime import timedelta
+import hashlib
+import hmac
 import os
+import secrets
+import smtplib
+from email.message import EmailMessage
 
 app = Flask(__name__)
 
@@ -91,6 +97,16 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
 
+class PasswordResetCode(db.Model):
+    __tablename__ = "password_reset_codes"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    code_hash = db.Column(db.String(64), nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    attempts = db.Column(db.Integer, nullable=False, default=0)
+    used_at = db.Column(db.DateTime, nullable=True)
+
+
 @app.route("/")
 def index():
     return jsonify({"message": "SiteWeather API running"})
@@ -132,6 +148,74 @@ def login():
         "role": user.role,
         "access_token": create_access_token(identity=str(user.id)),
     })
+
+
+def send_reset_email(recipient, code):
+    smtp_host = os.environ.get("SMTP_HOST")
+    smtp_username = os.environ.get("SMTP_USERNAME")
+    smtp_password = os.environ.get("SMTP_PASSWORD")
+    sender = os.environ.get("SMTP_FROM", smtp_username)
+    if not all([smtp_host, smtp_username, smtp_password, sender]):
+        raise RuntimeError("Password reset email is not configured")
+
+    message = EmailMessage()
+    message["Subject"] = "Your Site Weather password reset code"
+    message["From"] = sender
+    message["To"] = recipient
+    message.set_content(f"Your Site Weather password reset code is {code}. It expires in 10 minutes.")
+    with smtplib.SMTP(smtp_host, int(os.environ.get("SMTP_PORT", "587")), timeout=10) as server:
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+        server.send_message(message)
+
+
+@app.route("/api/auth/request-password-reset", methods=["POST"])
+def request_password_reset():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip().lower()
+    user = User.query.filter_by(email=email).first()
+    if user:
+        code = f"{secrets.randbelow(1000000):06d}"
+        reset = PasswordResetCode(
+            user_id=user.id,
+            code_hash=hashlib.sha256(code.encode()).hexdigest(),
+            expires_at=datetime.utcnow() + timedelta(minutes=10),
+        )
+        db.session.add(reset)
+        db.session.commit()
+        try:
+            send_reset_email(user.email, code)
+        except Exception:
+            db.session.delete(reset)
+            db.session.commit()
+            return jsonify({"error": "Password reset email is currently unavailable"}), 503
+    return jsonify({"message": "If an account exists for that email, a reset code has been sent."})
+
+
+@app.route("/api/auth/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip().lower()
+    code = data.get("code", "").strip()
+    password = data.get("password", "")
+    user = User.query.filter_by(email=email).first()
+    reset = PasswordResetCode.query.join(User).filter(
+        User.email == email,
+        PasswordResetCode.used_at.is_(None),
+        PasswordResetCode.expires_at > datetime.utcnow(),
+    ).order_by(PasswordResetCode.id.desc()).first() if user else None
+    if not reset or reset.attempts >= 5:
+        return jsonify({"error": "Invalid or expired reset code"}), 400
+    reset.attempts += 1
+    if not hmac.compare_digest(reset.code_hash, hashlib.sha256(code.encode()).hexdigest()):
+        db.session.commit()
+        return jsonify({"error": "Invalid or expired reset code"}), 400
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters"}), 400
+    user.set_password(password)
+    reset.used_at = datetime.utcnow()
+    db.session.commit()
+    return jsonify({"message": "Password updated successfully"})
 
 @app.route("/api/users", methods=["GET"])
 @jwt_required()

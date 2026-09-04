@@ -207,10 +207,16 @@ h1, h2, h3, h4, button {
 }
 
 .navbar {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
-  min-height: 172px;
+  width: 270px;
+  min-height: 100vh;
   padding: 0;
-  border-bottom: 3px solid var(--amber);
+  border-right: 3px solid var(--amber);
 }
 
 .sidebar-nav, .navbar-main, .brand, .nav-tools {
@@ -221,6 +227,7 @@ h1, h2, h3, h4, button {
 .sidebar-nav {
   width: 270px;
   flex: 0 0 270px;
+  min-height: 100vh;
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
@@ -254,9 +261,11 @@ h1, h2, h3, h4, button {
 .sidebar-action:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .sidebar-logout { color: #f1a59a; }
 .navbar-main { flex: 1; align-items: flex-end; padding: 1.25rem max(1.25rem, calc((100% - 810px) / 2)) 1.4rem; background: var(--steel); }
-.navbar-panel { max-width: 760px; margin: .7rem 0 0; color: #d1ddd5; font-size: .9rem; }
+.navbar-panel { display: none; }
 
 .content { padding-top: 2.5rem; }
+.App > .content { width: auto; max-width: none; margin-left: 270px; padding-right: max(1.25rem, calc((100vw - 1350px) / 2)); padding-left: max(1.25rem, calc((100vw - 1350px) / 2)); }
+.App > .footer { margin-left: 270px; }
 .panel, .tasks-panel { border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line); }
 .tasks-panel { border-top: 4px solid var(--amber); border-style: solid; }
 .tasks-panel::before { display: none; }
@@ -326,7 +335,7 @@ h1, h2, h3, h4, button {
 .forgot-link { border: 0; background: transparent; color: var(--steel); cursor: pointer; text-decoration: underline; }
 
 @media (max-width: 700px) {
-  .navbar { display: block; }
+  .navbar { position: static; display: block; width: 100%; min-height: 0; border-right: 0; border-bottom: 3px solid var(--amber); }
   .sidebar-nav { width: 100%; min-height: 0; gap: 1.5rem; padding: 1rem 1.25rem; }
   .sidebar-nav nav ul { display: flex; overflow-x: auto; }
   .tab { min-width: max-content; }
@@ -365,6 +374,13 @@ h1, h2, h3, h4, button {
   margin: 0;
   color: var(--muted);
 }
+
+.dashboard-tools { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .6rem; align-items: center; }
+.notification-button { border: 1px solid var(--line); border-radius: 999px; padding: .55rem .8rem; background: var(--surface); color: var(--ink); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+.notification-button span { color: var(--amber); font-size: .7rem; }
+.notification-button:hover { border-color: var(--amber); }
+.sidebar-user { padding-bottom: 1.1rem; border-bottom: 1px solid #315344; }
+.sidebar-user .sidebar-label { margin-bottom: .65rem; }
 
 .dashboard-date {
   min-width: 170px;
@@ -485,6 +501,7 @@ h1, h2, h3, h4, button {
 
 @media (max-width: 700px) {
   .dashboard-heading { align-items: flex-start; flex-direction: column; gap: 1.25rem; }
+  .dashboard-tools { justify-content: flex-start; }
   .dashboard-date { width: 100%; }
   .dashboard-side { width: 100%; }
   .search-bar { flex-direction: column; }
@@ -492,6 +509,9 @@ h1, h2, h3, h4, button {
   .tasks-heading { align-items: flex-start; flex-direction: column; }
   .footer-inner { align-items: flex-start; flex-direction: column; }
   .navbar-main { min-height: 120px; padding: 1rem 1.25rem 1.25rem; }
+  .sidebar-nav { min-height: 0; }
+  .App > .content { margin-left: 0; padding-right: 1.25rem; padding-left: 1.25rem; }
+  .App > .footer { margin-left: 0; }
 }
 
 .theme-dark {

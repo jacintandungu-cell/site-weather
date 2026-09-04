@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { createUser, login } from "../services/api";
+import { createUser, login, requestPasswordReset, resetPassword } from "../services/api";
 import ErrorBanner from "./ErrorBanner";
 
 function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
   const isSignup = mode === "signup";
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [resetRequested, setResetRequested] = useState(false);
+  const [resetComplete, setResetComplete] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", role: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,7 +16,38 @@ function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
   const switchMode = (nextMode) => {
     setError("");
     setForgotPassword(false);
+    setResetRequested(false);
+    setResetComplete(false);
     onSwitchMode(nextMode);
+  };
+
+  const requestReset = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await requestPasswordReset(form.email);
+      setResetRequested(true);
+    } catch (requestError) {
+      setError(requestError.message || "We couldn't send a reset code. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const confirmReset = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await resetPassword({ email: form.email, code: form.code, password: form.password });
+      setResetComplete(true);
+      setResetRequested(false);
+    } catch (requestError) {
+      setError(requestError.message || "We couldn't update your password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const submit = async (event) => {
@@ -51,12 +84,14 @@ function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
       <section className="auth-card">
         <p className="eyebrow">SITEWEATHER</p>
         <h1>{forgotPassword ? "Reset your password" : isSignup ? "Set up your field desk" : "Welcome back"}</h1>
-        <p className="auth-intro">{forgotPassword ? "Password resets are handled by your site administrator." : isSignup ? "Create your operator profile to start planning shifts." : "Sign in to see your sites and task schedule."}</p>
+        <p className="auth-intro">{forgotPassword ? "Request a one-time code by email, then choose a new password." : isSignup ? "Create your operator profile to start planning shifts." : "Sign in to see your sites and task schedule."}</p>
         {error && <ErrorBanner message={error} />}
-        {forgotPassword ? <form className="auth-form" onSubmit={(event) => { event.preventDefault(); setError("Ask your site administrator to reset this account."); }}>
-          <label>Email<input name="email" type="email" value={form.email} onChange={update} required /></label>
-          <button className="button button-primary">Request reset</button>
-          <button type="button" className="button button-quiet" onClick={() => { setForgotPassword(false); setError(""); }}>Back to login</button>
+        {forgotPassword ? <form className="auth-form" onSubmit={resetRequested ? confirmReset : requestReset}>
+          <label>Email<input name="email" type="email" value={form.email} onChange={update} required disabled={resetRequested} /></label>
+          {resetRequested && <><label>One-time code<input name="code" inputMode="numeric" pattern="[0-9]{6}" maxLength="6" value={form.code || ""} onChange={update} required /></label><label>New password<input name="password" type="password" value={form.password} onChange={update} minLength="8" required /></label></>}
+          {resetComplete && <p className="success-message">Password updated. You can now log in.</p>}
+          {!resetComplete && <button className="button button-primary" disabled={loading}>{loading ? "Working..." : resetRequested ? "Update password" : "Email me a code"}</button>}
+          <button type="button" className="button button-quiet" onClick={() => { setForgotPassword(false); setError(""); setResetRequested(false); }}>Back to login</button>
         </form> : <form onSubmit={submit} className="auth-form">
           {isSignup && <>
             <label>Name<input name="name" value={form.name} onChange={update} required /></label>

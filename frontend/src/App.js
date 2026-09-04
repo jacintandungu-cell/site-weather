@@ -111,6 +111,15 @@ function App() {
             <h2>Plan the shift with a clearer view.</h2>
             <p>Check conditions, find the workable window, then keep the crew aligned.</p>
           </div>
+          <div className="dashboard-tools">
+            <button className="theme-toggle" type="button" onClick={() => setDarkMode((enabled) => !enabled)} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
+              <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
+              <span>{darkMode ? "Light mode" : "Dark mode"}</span>
+            </button>
+            <button className="notification-button" type="button" aria-label="Notifications" title="Notifications coming soon">
+              <span aria-hidden="true">●</span> Notifications
+            </button>
+          </div>
         </header>
 
         <SearchBar setCity={setCity} />

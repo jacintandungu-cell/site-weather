@@ -62,6 +62,22 @@ export async function login(credentials) {
   });
 }
 
+export async function requestPasswordReset(email) {
+  return request("/auth/request-password-reset", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+}
+
+export async function resetPassword(credentials) {
+  return request("/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+}
+
 export async function updateUser(id, user) {
   return request(`/users/${id}`, {
     method: "PUT",
