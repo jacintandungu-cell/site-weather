@@ -118,7 +118,7 @@ The repository includes `render.yaml` for a Render Blueprint with:
 - a PostgreSQL database with migrations applied during deployment; and
 - a static site for the React frontend.
 
-In Render, choose **New > Blueprint**, connect this repository, and deploy the blueprint. Add `REACT_APP_WEATHER_API_KEY` to the frontend service environment variables before rebuilding if weather data is enabled. Render provides the API and frontend URLs to each service automatically.
+In Render, choose **New > Blueprint**, connect this repository, and deploy the blueprint. In the API service's **Environment** tab, add `SECRET_KEY` and `JWT_SECRET_KEY` as long random values. These are required by the production guard in `backend/app.py` and must be stored in Render, never committed to the repository. Add `OPENWEATHER_API_KEY` to the API service to enable weather requests, and set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, and `SMTP_FROM` if email password resets are enabled. Render provides the API and frontend URLs to each service automatically.
 
 📂 Project Structure
 Code

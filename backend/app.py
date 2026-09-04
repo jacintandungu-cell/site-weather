@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from sqlalchemy.engine import make_url
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from datetime import timedelta
@@ -19,15 +20,24 @@ from urllib.request import urlopen
 
 app = Flask(__name__)
 
-database_url = os.environ.get("DATABASE_URL", "sqlite:///siteweather.db")
+database_url = os.environ.get("DATABASE_URL", "").strip()
+is_production = os.environ.get("FLASK_ENV") == "production" or bool(os.environ.get("RENDER"))
+if not database_url:
+    if is_production:
+        raise RuntimeError("DATABASE_URL must be set in production")
+    database_url = "sqlite:///siteweather.db"
 if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
+try:
+    make_url(database_url)
+except Exception as error:
+    raise RuntimeError("DATABASE_URL must be a valid SQLAlchemy database URL") from error
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY")
 if not app.config['SECRET_KEY'] or not app.config['JWT_SECRET_KEY']:
-    if os.environ.get("FLASK_ENV") == "production" or os.environ.get("RENDER"):
+    if is_production:
         raise RuntimeError("SECRET_KEY and JWT_SECRET_KEY must be configured in production")
     app.config['SECRET_KEY'] = app.config['SECRET_KEY'] or "local-development-secret-key"
     app.config['JWT_SECRET_KEY'] = app.config['JWT_SECRET_KEY'] or app.config['SECRET_KEY']
