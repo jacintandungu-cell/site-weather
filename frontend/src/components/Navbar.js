@@ -33,7 +33,7 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme, si
 
   const selectTab = (tab) => {
     setActive(tab.id);
-    const target = document.getElementById(tab.id);
+    const target = document.getElementById(tab.id) || (tab.id === "forecast" && document.getElementById("section-01"));
     if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 

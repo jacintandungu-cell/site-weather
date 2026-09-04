@@ -14,8 +14,9 @@ function TaskForm({ setTasks, setError, users: availableUsers, selectedUserId })
   const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
-    if (availableUsers) {
+    if (availableUsers !== undefined) {
       setUsers(availableUsers);
+      setLoadingUsers(false);
       return undefined;
     }
     getUsers()
@@ -46,8 +47,8 @@ function TaskForm({ setTasks, setError, users: availableUsers, selectedUserId })
         weather_sensitive: false,
         user_id: ""
       });
-    } catch {
-      setError("Error creating task");
+    } catch (error) {
+      setError(error.message || "Unable to create this activity");
     }
   };
 

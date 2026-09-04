@@ -71,12 +71,16 @@ function App() {
       try {
         const data = await getTasks();
         setTasks(data);
-      } catch {
-        setError("Failed to load tasks");
+      } catch (err) {
+        setTasks([]);
+        setError(`Your shift plan is unavailable: ${err.message || "Unable to load tasks"}`);
       }
     };
     fetchTasks();
-    getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
+    getUsers().then(setUsers).catch((err) => {
+      setUsers(currentUser ? [currentUser] : []);
+      setError(`Team members unavailable: ${err.message || "Unable to load users"}`);
+    });
   }, [view]);
 
   const userTasks = tasks.filter((task) => String(task.user_id) === String(activeUserId));
@@ -134,7 +138,7 @@ function App() {
           {city ? (
             <WeatherResults city={city} />
           ) : (
-            <section className="panel empty dashboard-empty">
+            <section id="section-01" className="panel empty dashboard-empty">
               <span className="empty-mark" aria-hidden="true">01</span>
               <h2>Plan the shift before you lose it to the weather</h2>
               <p>
