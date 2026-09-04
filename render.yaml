@@ -19,6 +19,8 @@ services:
         generateValue: true
       - key: JWT_SECRET_KEY
         generateValue: true
+      - key: OPENWEATHER_API_KEY
+        sync: false
 
   - type: static
     name: construction-weather-frontend
@@ -31,8 +33,6 @@ services:
           type: web
           name: construction-weather-api
           envVarKey: RENDER_EXTERNAL_URL
-      - key: REACT_APP_WEATHER_API_KEY
-        sync: false
 
 databases:
   - name: construction-weather-db

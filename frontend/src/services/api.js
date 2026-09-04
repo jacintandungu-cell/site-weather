@@ -9,6 +9,10 @@ export async function getApiStatus() {
   return body;
 }
 
+export async function getWeather(endpoint, city) {
+  return request(`/weather/${endpoint}?city=${encodeURIComponent(city)}`);
+}
+
 async function request(path, options) {
   const token = localStorage.getItem("siteweather_token");
   const headers = { ...(options && options.headers), ...(token ? { Authorization: `Bearer ${token}` } : {}) };

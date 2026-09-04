@@ -8,10 +8,14 @@ from datetime import datetime
 from datetime import timedelta
 import hashlib
 import hmac
+import json
 import os
 import secrets
 import smtplib
 from email.message import EmailMessage
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
 app = Flask(__name__)
 
@@ -120,6 +124,34 @@ def create_user():
     if any(not data.get(field) for field in required):
         return jsonify({"error": "name, email, role, and password are required"}), 400
     if User.query.filter_by(email=data["email"]).first():
+
+
+def openweather(endpoint, city):
+    api_key = os.environ.get("OPENWEATHER_API_KEY")
+    if not api_key:
+        return jsonify({"error": "Weather service is not configured"}), 503
+    query = urlencode({"q": city, "appid": api_key, "units": "metric"})
+    try:
+        with urlopen(f"https://api.openweathermap.org/data/2.5/{endpoint}?{query}", timeout=10) as response:
+            return jsonify(json.loads(response.read().decode("utf-8"))), response.status
+    except HTTPError as error:
+        if error.code == 404:
+            return jsonify({"error": "Site location not found"}), 404
+        if error.code == 401:
+            return jsonify({"error": "Weather service credentials are invalid"}), 502
+        return jsonify({"error": "Weather service is unavailable"}), 502
+    except (TimeoutError, URLError):
+        return jsonify({"error": "Weather service is unavailable"}), 502
+
+
+@app.route("/api/weather/<endpoint>", methods=["GET"])
+def weather(endpoint):
+    if endpoint not in {"weather", "forecast"}:
+        return jsonify({"error": "Unknown weather endpoint"}), 404
+    city = request.args.get("city", "").strip()
+    if not city:
+        return jsonify({"error": "city is required"}), 400
+    return openweather(endpoint, city)
         return jsonify({"error": "email already exists"}), 409
     user = User(name=data["name"], email=data["email"], role=data["role"])
     user.set_password(data["password"])
