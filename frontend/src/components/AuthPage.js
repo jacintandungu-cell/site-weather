@@ -60,7 +60,17 @@ function AuthPage({ mode, onAuthenticated, onBack, onSwitchMode }) {
         </form> : <form onSubmit={submit} className="auth-form">
           {isSignup && <>
             <label>Name<input name="name" value={form.name} onChange={update} required /></label>
-            <label>Role<input name="role" value={form.role} onChange={update} placeholder="Foreman" required /></label>
+            <label>Role
+              <select name="role" value={form.role} onChange={update} required>
+                <option value="">Select your role</option>
+                <option value="Site manager">Site manager</option>
+                <option value="Project manager">Project manager</option>
+                <option value="Construction engineer">Construction engineer</option>
+                <option value="Safety officer">Safety officer</option>
+                <option value="Client / developer">Client / developer</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
           </>}
           <label>Email<input name="email" type="email" value={form.email} onChange={update} required /></label>
           <label>Password<input name="password" type="password" value={form.password} onChange={update} required /></label>
