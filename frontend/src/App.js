@@ -12,7 +12,7 @@ import LandingPage from "./components/LandingPage";
 import AuthPage from "./components/AuthPage";
 import SettingsPage from "./components/SettingsPage";
 import UserList from "./components/UserList";
-import { getApiStatus, getTasks, getUsers } from "./services/api";
+import { getTasks, getUsers } from "./services/api";
 import "./App.css";
 
 function App() {
@@ -24,7 +24,6 @@ function App() {
   const [view, setView] = useState("landing");
   const [currentUser, setCurrentUser] = useState(null);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("siteweather_theme") === "dark");
-  const [apiStatus, setApiStatus] = useState("checking");
 
   useEffect(() => {
     localStorage.setItem("siteweather_theme", darkMode ? "dark" : "light");
@@ -79,7 +78,6 @@ function App() {
     };
     fetchTasks();
     getUsers().then(setUsers).catch((err) => setError(err.message || "Failed to load users"));
-    getApiStatus().then(() => setApiStatus("online")).catch(() => setApiStatus("offline"));
   }, [view]);
 
   const appClassName = darkMode ? "App theme-dark" : "App";
@@ -112,19 +110,6 @@ function App() {
             <p className="eyebrow">FIELD DESK / TODAY</p>
             <h2>Plan the shift with a clearer view.</h2>
             <p>Check conditions, find the workable window, then keep the crew aligned.</p>
-          </div>
-          <div className="dashboard-side">
-            <div className="dashboard-date" aria-label="Today's focus">
-              <span>FOCUS</span>
-              <strong>Weather-led work</strong>
-            </div>
-            <p className={"api-status api-status-" + apiStatus}>
-              <span aria-hidden="true" /> API {apiStatus}
-            </p>
-            <div className="dashboard-actions">
-              <button type="button" className="profile-button" onClick={() => setView("settings")}>Update profile</button>
-              <button type="button" className="logout-button dashboard-logout" onClick={logout}>Log out</button>
-            </div>
           </div>
         </header>
 

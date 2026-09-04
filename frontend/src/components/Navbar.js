@@ -2,11 +2,6 @@ import React, { useState } from "react";
 
 const TABS = [
   {
-    id: "weather",
-    label: "Site conditions",
-    body: "A go / caution / stop call for every trade on site - concrete, roofing, lifting, painting, earthworks, scaffolding, masonry and general labour - with the control measures to put in place before the shift starts.",
-  },
-  {
     id: "forecast",
     label: "5-day plan",
     body: "Each of the next five days scored for workable hours, so you can book pours, major lifts and roofing into the best window and move indoor works into the wet ones.",
@@ -16,7 +11,22 @@ const TABS = [
     label: "About",
     body: "Weather delays and rework are avoidable when the forecast is read against real site limits. This dashboard applies those limits for you and tells you what to do, not just what the weather is.",
   },
+  {
+    id: "weather",
+    label: "Site conditions",
+    body: "A go / caution / stop call for every trade on site - concrete, roofing, lifting, painting, earthworks, scaffolding, masonry and general labour - with the control measures to put in place before the shift starts.",
+  },
 ];
+
+function initials(name = "") {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join("");
+}
 
 function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) {
   const [active, setActive] = useState("weather");
@@ -36,7 +46,7 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
         </div>
 
         <div className="nav-tools">
-          {currentUser && <span className="signed-in">{currentUser.name}</span>}
+          {currentUser && <div className="user-identity"><span className="user-avatar" aria-hidden="true">{initials(currentUser.name)}</span><span className="signed-in">{currentUser.name}</span></div>}
           {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
             <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
             <span>{darkMode ? "Light mode" : "Dark mode"}</span>
