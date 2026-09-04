@@ -132,6 +132,12 @@ function App() {
           </div>
         </header>
 
+        <section className="operations-summary" aria-label="Operations summary">
+          <article><span>MY TASKS</span><strong>{userTasks.length}</strong><small>Total assigned</small></article>
+          <article><span>TO COMPLETE</span><strong>{pendingTasks}</strong><small>Pending actions</small></article>
+          <article><span>WEATHER WATCH</span><strong>{weatherTasks}</strong><small>Weather-sensitive</small></article>
+        </section>
+
         <section id="site-conditions" className="dashboard-route-section">
           <SearchBar setCity={setCity} />
 
@@ -156,12 +162,6 @@ function App() {
           <p className="eyebrow">ABOUT SITEWEATHER</p>
           <h2>Make the next site decision with evidence.</h2>
           <p>SiteWeather helps construction teams turn changing conditions into a practical plan, so people, materials, and weather-sensitive work are coordinated before the shift begins.</p>
-        </section>
-
-        <section className="operations-summary" aria-label="Operations summary">
-          <article><span>MY TASKS</span><strong>{userTasks.length}</strong><small>Total assigned</small></article>
-          <article><span>TO COMPLETE</span><strong>{pendingTasks}</strong><small>Pending actions</small></article>
-          <article><span>WEATHER WATCH</span><strong>{weatherTasks}</strong><small>Weather-sensitive</small></article>
         </section>
 
         <section className="tasks-panel">

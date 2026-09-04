@@ -461,19 +461,6 @@ h1, h2, h3, h4, button {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .42);
 }
 
-.search::before {
-  content: "LIVE CHECK";
-  position: absolute;
-  top: -10px;
-  left: 1.25rem;
-  padding: 0 .45rem;
-  background: var(--bg);
-  color: #9a6910;
-  font-size: .65rem;
-  font-weight: 700;
-  letter-spacing: .14em;
-}
-
 .search-bar { display: flex; gap: .6rem; }
 .search-bar input {
   min-width: 0;
@@ -568,7 +555,6 @@ h1, h2, h3, h4, button {
 .theme-dark .footer-meta { color: #c2d2c8; }
 .theme-dark .panel, .theme-dark .tasks-panel, .theme-dark .auth-card, .theme-dark .settings-card { background: var(--surface); }
 .theme-dark .search { background: #20352a; border-color: #3d5b49; }
-.theme-dark .search::before { background: var(--bg); }
 .theme-dark .search-bar input, .theme-dark .task-form input, .theme-dark .task-form select, .theme-dark .auth-form input, .theme-dark .auth-form select { background: #111a15; color: var(--ink); border-color: var(--line); }
 .theme-dark .task-item { background: #1d2a23; }
 .theme-dark .task-item button { background: #25352c; color: var(--ink); border-color: var(--line); }
@@ -590,6 +576,7 @@ h1, h2, h3, h4, button {
 .theme-dark .day header strong,
 .theme-dark .activity h4,
 .theme-dark .section-title,
+.theme-dark .operations-summary strong,
 .theme-dark .dashboard-about h2 { color: #f0f7f2; }
 .theme-dark .activity,
 .theme-dark .day,
