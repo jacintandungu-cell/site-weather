@@ -507,3 +507,21 @@ h1, h2, h3, h4, button {
 .theme-dark .dashboard-empty::after { border-color: rgba(240, 180, 41, .18); }
 .theme-dark .users-panel input { background: #111a15; }
 .theme-dark .landing-theme-toggle { color: var(--ink); border-color: #718479; }
+.theme-dark .landing-copy h1,
+.theme-dark .story-intro h2,
+.theme-dark .story-grid h3,
+.theme-dark .faq-list summary,
+.theme-dark .dashboard-heading h2,
+.theme-dark .tasks-heading h2,
+.theme-dark .users-panel h2,
+.theme-dark .auth-card h1,
+.theme-dark .settings-card h1 { color: #f0f7f2; }
+.theme-dark .landing-lede,
+.theme-dark .story-grid p,
+.theme-dark .dashboard-heading p:not(.eyebrow),
+.theme-dark .auth-intro,
+.theme-dark .auth-form label { color: #b9cabe; }
+.theme-dark .button-quiet,
+.theme-dark .back-link,
+.theme-dark .forgot-link { color: #d9e8de; }
+.theme-dark .button-quiet { border-color: #718479; }
