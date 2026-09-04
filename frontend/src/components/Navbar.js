@@ -34,27 +34,17 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
 
   return (
     <header className="navbar">
-      <div className="navbar-top">
+      <aside className="sidebar-nav">
         <div className="brand">
-          <span className="brand-mark" aria-hidden="true">
-            🏗
-          </span>
+          <span className="brand-mark" aria-hidden="true">🏗</span>
           <div>
             <h1>Site Weather</h1>
             <p>Weather turned into site decisions</p>
           </div>
         </div>
 
-        <div className="nav-tools">
-          {currentUser && <div className="user-identity"><span className="user-avatar" aria-hidden="true">{initials(currentUser.name)}</span><span className="signed-in">{currentUser.name}</span></div>}
-          {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
-            <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
-            <span>{darkMode ? "Light mode" : "Dark mode"}</span>
-          </button>}
-          {onSettings && <button className="logout-button" type="button" onClick={onSettings}>Profile</button>}
-          {onLogout && <button className="logout-button" type="button" onClick={onLogout}>Log out</button>}
-        </div>
-        <nav>
+        <nav aria-label="Dashboard navigation">
+          <span className="sidebar-label">WORKSPACE</span>
           <ul>
             {TABS.map((tab) => (
               <li key={tab.id}>
@@ -63,15 +53,29 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
                   className={active === tab.id ? "tab tab-active" : "tab"}
                   onClick={() => setActive(tab.id)}
                 >
+                  <span className="tab-index">0{TABS.indexOf(tab) + 1}</span>
                   {tab.label}
                 </button>
               </li>
             ))}
           </ul>
         </nav>
-      </div>
 
-      <p className="navbar-panel">{panel.body}</p>
+        <div className="sidebar-bottom">
+          {currentUser && <div className="user-identity"><span className="user-avatar" aria-hidden="true">{initials(currentUser.name)}</span><span className="signed-in">{currentUser.name}</span></div>}
+          {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
+            <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
+            <span>{darkMode ? "Light mode" : "Dark mode"}</span>
+          </button>}
+          <div className="sidebar-actions">
+            {onSettings && <button className="sidebar-action" type="button" onClick={onSettings}>Profile settings</button>}
+            {onLogout && <button className="sidebar-action sidebar-logout" type="button" onClick={onLogout}>Log out</button>}
+          </div>
+        </div>
+      </aside>
+      <div className="navbar-main">
+        <p className="navbar-panel">{panel.body}</p>
+      </div>
     </header>
   );
 }
