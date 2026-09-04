@@ -4,6 +4,10 @@ const API_KEY =
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
 function loadWeather(endpoint, city) {
+  if (!API_KEY) {
+    return Promise.reject(new Error("Weather service is not configured. Add REACT_APP_WEATHER_API_KEY to the frontend environment."));
+  }
+
   const url =
     BASE_URL +
     "/" +

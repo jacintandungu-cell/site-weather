@@ -14,10 +14,13 @@ if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get(
-    "SECRET_KEY", "siteweather-development-secret-key-change-me"
-)
-app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", app.config['SECRET_KEY'])
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY")
+if not app.config['SECRET_KEY'] or not app.config['JWT_SECRET_KEY']:
+    if os.environ.get("FLASK_ENV") == "production":
+        raise RuntimeError("SECRET_KEY and JWT_SECRET_KEY must be configured in production")
+    app.config['SECRET_KEY'] = app.config['SECRET_KEY'] or "local-development-secret-key"
+    app.config['JWT_SECRET_KEY'] = app.config['JWT_SECRET_KEY'] or app.config['SECRET_KEY']
 
 db = SQLAlchemy(app)
 Migrate(app, db)
