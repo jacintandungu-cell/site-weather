@@ -4,8 +4,9 @@ function LandingPage({ onLogin, onSignup, darkMode, onToggleTheme }) {
   return (
     <main className="landing-page">
       <div className="landing-toolbar">
-        <button type="button" className="theme-toggle landing-theme-toggle" onClick={onToggleTheme}>
-          {darkMode ? "Light mode" : "Dark mode"}
+        <button type="button" className="theme-toggle landing-theme-toggle" onClick={onToggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
+          <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
+          <span>{darkMode ? "Light mode" : "Dark mode"}</span>
         </button>
       </div>
       <section className="landing-hero">

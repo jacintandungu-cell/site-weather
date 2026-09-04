@@ -371,8 +371,10 @@ h1, h2, h3, h4, button {
 .profile-button:hover { border-color: var(--steel); background: rgba(24, 54, 45, .07); }
 .dashboard-logout { border: 1px solid var(--stop); background: var(--stop); color: #fff; }
 .dashboard-logout:hover { background: #8f3022; }
-.theme-toggle { border: 1px solid #638074; border-radius: 5px; padding: .45rem .7rem; background: transparent; color: inherit; cursor: pointer; }
-.theme-toggle:hover { border-color: var(--amber); color: var(--amber); }
+.theme-toggle { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid #638074; border-radius: 999px; padding: .42rem .75rem .42rem .5rem; background: rgba(255, 255, 255, .06); color: inherit; font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
+.theme-toggle:hover { border-color: var(--amber); background: rgba(240, 180, 41, .12); color: var(--amber); transform: translateY(-1px); }
+.theme-icon { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 50%; background: var(--amber); color: #18362d; font-size: 1rem; line-height: 1; }
+.landing-theme-toggle { background: var(--surface); }
 
 .dashboard-date span {
   display: block;

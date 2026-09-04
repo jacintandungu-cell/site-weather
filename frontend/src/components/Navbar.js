@@ -37,7 +37,10 @@ function Navbar({ currentUser, onLogout, onSettings, darkMode, onToggleTheme }) 
 
         <div className="nav-tools">
           {currentUser && <span className="signed-in">{currentUser.name}</span>}
-          {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme}>{darkMode ? "Light mode" : "Dark mode"}</button>}
+          {onToggleTheme && <button className="theme-toggle" type="button" onClick={onToggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
+            <span className="theme-icon" aria-hidden="true">{darkMode ? "☀" : "☾"}</span>
+            <span>{darkMode ? "Light mode" : "Dark mode"}</span>
+          </button>}
           {onSettings && <button className="logout-button" type="button" onClick={onSettings}>Profile</button>}
           {onLogout && <button className="logout-button" type="button" onClick={onLogout}>Log out</button>}
         </div>
